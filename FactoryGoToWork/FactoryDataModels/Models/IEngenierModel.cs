@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FactoryDataModels.Models
 {
-	public interface IMasterModel : IId
+	public interface IEngenierModel : IId
 	{
 		string Password { get; }
 

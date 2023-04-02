@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implements\" />
-    <Folder Include="OfficePackage\" />
+    <Compile Remove="Implements\**" />
+    <Compile Remove="OfficePackage\**" />
+    <EmbeddedResource Remove="Implements\**" />
+    <EmbeddedResource Remove="OfficePackage\**" />
+    <None Remove="Implements\**" />
+    <None Remove="OfficePackage\**" />
   </ItemGroup>
 
   <ItemGroup>

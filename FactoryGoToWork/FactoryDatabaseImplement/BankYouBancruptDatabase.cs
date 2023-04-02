@@ -20,20 +20,9 @@ namespace FactoryImplement
 			}
             base.OnConfiguring(optionsBuilder);
         }
-        public virtual DbSet<Account> Accounts { set; get; }
 
-        public virtual DbSet<Card> Cards { set; get; }
+        public virtual DbSet<Master> Masters { set; get; }
 
-        public virtual DbSet<Cashier> Cashiers { set; get; }
-
-        public virtual DbSet<CashWithdrawal> CashWithdrawals { set; get; }
-
-        public virtual DbSet<Client> Clients { set; get; }
-
-        public virtual DbSet<Debiting> Debitings { set; get; }
-
-        public virtual DbSet<Crediting> Creditings { set; get; }
-
-        public virtual DbSet<MoneyTransfer> MoneyTransfers { set; get; }
+        public virtual DbSet<Engenier> Engeniers { set; get; }
     }
 }
