@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FactoryImplement.Models
+namespace FactoryDatabaseImplement.Models
 {
     public class Engenier : IEngenierModel
     {
@@ -23,6 +23,9 @@ namespace FactoryImplement.Models
 
         [Required]
         public string Password { get; set; } = string.Empty;
+
+        [ForeignKey("EngenierId")]
+        public virtual List<Reinforced> Reinforceds { get; set; } = new();
 
 
         public EngenierViewModel GetViewModel => new()

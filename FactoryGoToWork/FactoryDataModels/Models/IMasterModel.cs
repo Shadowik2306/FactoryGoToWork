@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FactoryDataModels.Models
 {
-	public interface IEngenierModel : IId
+	public interface IMasterModel : IId
 	{
 		string Password { get; }
 
@@ -15,5 +14,5 @@ namespace FactoryDataModels.Models
 
 		string Email { get; }
 
-    }
+	}
 }

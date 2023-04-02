@@ -16,12 +16,12 @@ namespace FactoryBusinessLogic.BusinessLogics
 	{
 		private readonly ILogger _logger;
 
-		private readonly IMasterStorage _cashierStorage;
+		private readonly IMasterStorage _masterStorage;
 
-		public MasterLogic(ILogger<MasterLogic> logger, IMasterStorage cashierStorage)
+		public MasterLogic(ILogger<MasterLogic> logger, IMasterStorage masterStorage)
 		{
 			_logger = logger;
-			_cashierStorage = cashierStorage;
+			_masterStorage = masterStorage;
 		}
 
 		public MasterViewModel? ReadElement(MasterSearchModel model)
@@ -34,7 +34,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 			_logger.LogInformation("ReadElement. MasterName:{Name}. MasterSurname:{Surname}. MasterPatronymic:{Patronymic}. Id:{Id}", 
 				model.Name, model.Surname, model.Patronymic, model?.Id);
 
-			var element = _cashierStorage.GetElement(model);
+			var element = _masterStorage.GetElement(model);
 
 			if (element == null)
 			{
@@ -53,7 +53,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 			_logger.LogInformation("ReadList. MasterName:{Name}. MasterSurname:{Surname}. MasterPatronymic:{Patronymic}. Id:{Id}", 
 				model.Name, model.Surname, model.Patronymic, model?.Id);
 
-			var list = model == null ? _cashierStorage.GetFullList() : _cashierStorage.GetFilteredList(model);
+			var list = model == null ? _masterStorage.GetFullList() : _masterStorage.GetFilteredList(model);
 
 			if (list == null)
 			{
@@ -70,7 +70,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 		{
 			CheckModel(model);
 
-			if (_cashierStorage.Insert(model) == null)
+			if (_masterStorage.Insert(model) == null)
 			{
 				_logger.LogWarning("Insert operation failed");
 
@@ -84,7 +84,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 		{
 			CheckModel(model);
 
-			if (_cashierStorage.Update(model) == null)
+			if (_masterStorage.Update(model) == null)
 			{
 				_logger.LogWarning("Update operation failed");
 
@@ -100,7 +100,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 
 			_logger.LogInformation("Delete. Id:{Id}", model.Id);
 
-			if (_cashierStorage.Delete(model) == null)
+			if (_masterStorage.Delete(model) == null)
 			{
 				_logger.LogWarning("Delete operation failed");
 
@@ -137,7 +137,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 
 			_logger.LogInformation("Master. MasterName:{Fio}.Email:{Email}.Password:{Password}.Id:{Id}",
 				model.Fio, model.Email, model.Password, model.Id);
-			var element = _cashierStorage.GetElement(new MasterSearchModel
+			var element = _masterStorage.GetElement(new MasterSearchModel
 			{
 				Email = model.Email,
 			});

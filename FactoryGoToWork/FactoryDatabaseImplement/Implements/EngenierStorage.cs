@@ -1,20 +1,20 @@
 ﻿using FactoryContracts.BindingModels;
 using FactoryContracts.SearchModels;
 using FactoryContracts.ViewModels;
-using FactoryImplement.Models;
+using FactoryDatabaseImplement.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FactoryImplement.Implements
+namespace FactoryDatabaseImplement.Implements
 {
 	public class EngenierStorage
 	{
         public EngenierViewModel? Delete(EngenierBindingModel model)
         {
-            using var context = new BankYouBancruptDatabase();
+            using var context = new FactoryDatabase();
             var element = context.Engeniers.FirstOrDefault(rec => rec.Id == model.Id);
             if (element != null)
             {
@@ -31,7 +31,7 @@ namespace FactoryImplement.Implements
             {
                 return null;
             }
-            using var context = new BankYouBancruptDatabase();
+            using var context = new FactoryDatabase();
             return context.Engeniers.FirstOrDefault(x =>
             (!string.IsNullOrEmpty(model.Email) && x.Email == model.Email && !string.IsNullOrEmpty(model.Password) && x.Password == model.Password) ||
             (model.Id.HasValue && x.Id == model.Id))
@@ -44,40 +44,40 @@ namespace FactoryImplement.Implements
             {
                 return new();
             }
-            using var context = new BankYouBancruptDatabase();
+            using var context = new FactoryDatabase();
             return context.Engeniers.Where(x => x.Fio.Contains(model.Name)).Select(x => x.GetViewModel).ToList();
         }
 
         public List<EngenierViewModel> GetFullList()
         {
-            using var context = new BankYouBancruptDatabase();
+            using var context = new FactoryDatabase();
             return context.Engeniers.Select(x => x.GetViewModel).ToList();
         }
 
         public EngenierViewModel? Insert(EngenierBindingModel model)
         {
-            var newComponent = Engenier.Create(model);
-            if (newComponent == null)
+            var newEngenier = Engenier.Create(model);
+            if (newEngenier == null)
             {
                 return null;
             }
-            using var context = new BankYouBancruptDatabase();
-            context.Engeniers.Add(newComponent);
+            using var context = new FactoryDatabase();
+            context.Engeniers.Add(newEngenier);
             context.SaveChanges();
-            return newComponent.GetViewModel;
+            return newEngenier.GetViewModel;
         }
 
         public EngenierViewModel? Update(EngenierBindingModel model)
         {
-            using var context = new BankYouBancruptDatabase();
-            var component = context.Engeniers.FirstOrDefault(x => x.Id == model.Id);
-            if (component == null)
+            using var context = new FactoryDatabase();
+            var engenier = context.Engeniers.FirstOrDefault(x => x.Id == model.Id);
+            if (engenier == null)
             {
                 return null;
             }
-            component.Update(model);
+            engenier.Update(model);
             context.SaveChanges();
-            return component.GetViewModel;
+            return engenier.GetViewModel;
         }
     }
 }

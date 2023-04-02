@@ -2,7 +2,7 @@
 using FactoryContracts.SearchModels;
 using FactoryContracts.StoragesContracts;
 using FactoryContracts.ViewModels;
-using FactoryImplement.Models;
+using FactoryDatabaseImplement.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,13 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FactoryImplement.Implements
+namespace FactoryDatabaseImplement.Implements
 {
 	public class MasterStorage : IMasterStorage
 	{
 		public List<MasterViewModel> GetFullList()
 		{
-			using var context = new BankYouBancruptDatabase();
+			using var context = new FactoryDatabase();
 
 			return context.Masters
 					.Select(x => x.GetViewModel)
@@ -30,7 +30,7 @@ namespace FactoryImplement.Implements
 				return new();
 			}
 
-			using var context = new BankYouBancruptDatabase();
+			using var context = new FactoryDatabase();
 
 			return context.Masters
 					.Where(x => x.Email.Contains(model.Email))
@@ -45,7 +45,7 @@ namespace FactoryImplement.Implements
 				return null;
 			}
 
-			using var context = new BankYouBancruptDatabase();
+			using var context = new FactoryDatabase();
 
 			return context.Masters
 					.FirstOrDefault(x => (!string.IsNullOrEmpty(model.Email) && x.Email == model.Email) ||
@@ -55,7 +55,7 @@ namespace FactoryImplement.Implements
 
 		public MasterViewModel? Insert(MasterBindingModel model)
 		{
-			using var context = new BankYouBancruptDatabase();
+			using var context = new FactoryDatabase();
 
 			var newMaster = Master.Create(context, model);
 
@@ -72,23 +72,23 @@ namespace FactoryImplement.Implements
 
 		public MasterViewModel? Update(MasterBindingModel model)
 		{
-			using var context = new BankYouBancruptDatabase();
-			var cashier = context.Masters.FirstOrDefault(x => x.Id == model.Id);
+			using var context = new FactoryDatabase();
+			var master = context.Masters.FirstOrDefault(x => x.Id == model.Id);
 
-			if (cashier == null)
+			if (master == null)
 			{
 				return null;
 			}
 
-			cashier.Update(model);
+			master.Update(model);
 			context.SaveChanges();
 
-			return cashier.GetViewModel;
+			return master.GetViewModel;
 		}
 
 		public MasterViewModel? Delete(MasterBindingModel model)
 		{
-			using var context = new BankYouBancruptDatabase();
+			using var context = new FactoryDatabase();
 			var element = context.Masters.FirstOrDefault(rec => rec.Id == model.Id);
 
 			if (element != null)

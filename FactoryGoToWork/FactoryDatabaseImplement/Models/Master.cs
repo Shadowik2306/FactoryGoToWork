@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FactoryImplement.Models
+namespace FactoryDatabaseImplement.Models
 {
     public class Master : IMasterModel
     {
@@ -25,8 +25,10 @@ namespace FactoryImplement.Models
 		[Required]
 		public string Email { get; set; } = string.Empty;
 
+        [ForeignKey("MasterId")]
+        public virtual List<Lathe> LatheId { get; set; } = new();
 
-		public static Master Create(BankYouBancruptDatabase context, MasterBindingModel model)
+        public static Master Create(FactoryDatabase context, MasterBindingModel model)
 		{
 			return new Master()
 			{
