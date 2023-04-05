@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FactoryBankruptView", "FactoryView\FactoryBankruptView.csproj", "{57B42CA9-DC03-4705-BCDA-4B367028857E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FactoryView", "FactoryView\FactoryView.csproj", "{57B42CA9-DC03-4705-BCDA-4B367028857E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FactoryDataModels", "FactoryDataModels\FactoryDataModels.csproj", "{A3F34BD4-4F04-4E21-8C8B-115E681957E8}"
 EndProject

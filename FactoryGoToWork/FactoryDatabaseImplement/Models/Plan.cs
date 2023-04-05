@@ -71,7 +71,7 @@ namespace FactoryDatabaseImplement.Models
 
         public void Update(PlanBindingModel model)
         {
-            Id = model.Id;
+
             PlanName = model.PlanName;
         }
 
@@ -83,14 +83,13 @@ namespace FactoryDatabaseImplement.Models
 
         
 
-        public void UpdatePlans(FactoryDatabase context, PlanBindingModel model)
+        public void UpdateLathes(FactoryDatabase context, PlanBindingModel model)
         {
             var PlanLathes = context.PlanLathes.Where(rec => rec.PlanId == model.Id).ToList();
             if (PlanLathes != null && PlanLathes.Count > 0)
             {
                 context.PlanLathes.RemoveRange(PlanLathes.Where(rec => !model.PlanLathes.ContainsKey(rec.LatheId)));
                 context.SaveChanges();
-                PlanLathes = context.PlanLathes.Where(rec => rec.PlanId == model.Id).ToList();
                 foreach (var updateComponent in PlanLathes)
                 {
                     updateComponent.Count = model.PlanLathes[updateComponent.LatheId].Item2;
@@ -119,7 +118,6 @@ namespace FactoryDatabaseImplement.Models
             {
                 context.PlanComponents.RemoveRange(PlanComponents.Where(rec => !model.PlanComponents.ContainsKey(rec.ComponentId)));
                 context.SaveChanges();
-                PlanComponents = context.PlanComponents.Where(rec => rec.ComponentId == model.Id).ToList();
                 foreach (var updateComponent in PlanComponents)
                 {
                     updateComponent.Count = model.PlanComponents[updateComponent.ComponentId].Item2;

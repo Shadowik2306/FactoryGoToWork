@@ -74,7 +74,7 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
                 Plan.Update(model);
                 context.SaveChanges();
                 Plan.UpdateComponents(context, model);
-                Plan.UpdatePlans(context, model);
+                Plan.UpdateLathes(context, model);
                 transaction.Commit();
                 return Plan.GetViewModel;
             }

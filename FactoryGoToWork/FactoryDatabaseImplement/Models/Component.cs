@@ -31,20 +31,8 @@ namespace FactoryDatabaseImplement.Models
         [ForeignKey("ComponentId")]
         public virtual List<Stage> Stages { get; set; } = new();
 
-        public static Component? Create(ComponentBindingModel model)
-        {
-            if (model == null)
-            {
-                return null;
-            }
-            return new Component()
-            {
-                Id = model.Id,
-                ComponentName = model.ComponentName,
-            };
-        }
 
-        public static Component Create(ComponentViewModel model)
+        public static Component Create(ComponentBindingModel model)
         {
             return new Component
             {
