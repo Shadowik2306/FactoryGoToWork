@@ -13,5 +13,7 @@ namespace FactoryContracts.ViewModels
         public Dictionary<int, (ILatheModel, int)> PlanLathes { get; set; } = new();
 
         public Dictionary<int, (IComponentModel, int)> PlanComponents { get; set; } = new();
+        [DisplayName("Дата выполнения")]
+        public DateTime date { get; set; }
     }
 }

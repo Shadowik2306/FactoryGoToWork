@@ -11,5 +11,7 @@ namespace FactoryContracts.BusinessLogicsContracts
         bool Create(PlanBindingModel model);
         bool Update(PlanBindingModel model);
         bool Delete(PlanBindingModel model);
+
+
     }
 }

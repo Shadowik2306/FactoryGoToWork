@@ -11,5 +11,7 @@ namespace FactoryContracts.BindingModels
         public Dictionary<int, (ILatheModel, int)> PlanLathes { get; set; } = new();
 
         public Dictionary<int, (IComponentModel, int)> PlanComponents { get; set; } = new();
+
+        public DateTime date { get; set; }
     }
 }

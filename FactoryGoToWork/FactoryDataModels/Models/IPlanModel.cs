@@ -13,5 +13,7 @@ namespace FactoryDataModels.Models
         Dictionary<int, (ILatheModel, int)> PlanLathes { get; }
 
         Dictionary<int, (IComponentModel, int)> PlanComponents { get; }
+
+        DateTime date { get; }
     }
 }

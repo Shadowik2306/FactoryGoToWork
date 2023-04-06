@@ -9,6 +9,9 @@ namespace FactoryDataModels.Models
     public interface ILatheBusyModel : IId
     {
         int Percent { get; }
+
+        DateTime Date { get; }
+
         
     }
 }

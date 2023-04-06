@@ -7,5 +7,9 @@ namespace FactoryContracts.SearchModels
         public int? Id { get; set; }
 
         public int? Percent { get; set; }
+
+        public DateTime? DateTo { get; set; }
+
+        public DateTime? DateFrom { get; set; }
     }
 }

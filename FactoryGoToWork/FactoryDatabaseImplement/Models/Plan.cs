@@ -18,7 +18,11 @@ namespace FactoryDatabaseImplement.Models
         public string PlanName { get; set; } = String.Empty;
 
         [Required]
+        public DateTime date { get; set; }
+
+        [Required]
         private Dictionary<int, (ILatheModel, int)>? _planLathes { get; set; } = null;
+
         
         [NotMapped]
         public Dictionary<int, (ILatheModel, int)> PlanLathes
@@ -118,6 +122,7 @@ namespace FactoryDatabaseImplement.Models
             {
                 context.PlanComponents.RemoveRange(PlanComponents.Where(rec => !model.PlanComponents.ContainsKey(rec.ComponentId)));
                 context.SaveChanges();
+                PlanComponents = context.PlanComponents.Where(rec => rec.PlanId == model.Id).ToList();
                 foreach (var updateComponent in PlanComponents)
                 {
                     updateComponent.Count = model.PlanComponents[updateComponent.ComponentId].Item2;

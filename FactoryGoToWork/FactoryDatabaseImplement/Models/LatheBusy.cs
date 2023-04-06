@@ -21,6 +21,8 @@ namespace FactoryDatabaseImplement.Models
 		
         [ForeignKey("BusyId")]
         public virtual List<Lathe> Lathes { get; set; } = new();
+        [Required]
+        public DateTime Date { get; set; }
 
         public static LatheBusy Create(FactoryDatabase context, LatheBusyBindingModel model)
 		{

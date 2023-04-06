@@ -7,5 +7,7 @@ namespace FactoryContracts.BindingModels
         public int Id { get; set; }
 
         public int Percent { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }

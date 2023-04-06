@@ -9,5 +9,7 @@ namespace FactoryContracts.ViewModels
 
         [DisplayName("Процент занятости")]
         public int Percent { get; set; }
+        [DisplayName("Дата занятости")]
+        public DateTime Date { get; set; }
     }
 }
