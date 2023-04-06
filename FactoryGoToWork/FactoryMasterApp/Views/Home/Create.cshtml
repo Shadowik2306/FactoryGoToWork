@@ -1,0 +1,38 @@
+﻿@{
+	ViewData["Title"] = "Create";
+}
+<div class="text-center">
+	<h2 class="display-4">Создание станка</h2>
+</div>
+<form method="post">
+	<div class="row">
+		<div class="col-4">Название:</div>
+		<div class="col-8"><input type="text" name="count" id="count" /></div>
+	</div>
+	<div class="row">
+		<div class="col-4">Занятость:</div>
+		<div class="col-8">
+			<select id="busy" name="busy" class="form-control" asp-items="@(new SelectList(@ViewBag.LatheBusy,"Id", "Percent"))"></select>
+		</div>
+	</div>
+</form>
+
+<script>
+	$('#busy').on('change', function () {
+		check();
+	});
+
+	function check() {
+		var busy = $('#busy').val();
+		if (busy) {
+			$.ajax({
+				method: "POST",
+				url: "/Home/Calc",
+				data: { busy: busy },
+				success: function (result) {
+					$("#sum").val(result);
+				}
+			});
+		};
+	}
+</script>
