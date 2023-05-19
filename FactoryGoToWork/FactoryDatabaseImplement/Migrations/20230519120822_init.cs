@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace FactoryDatabaseImplement.Migrations
 {
     /// <inheritdoc />
-    public partial class initmigration : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +18,7 @@ namespace FactoryDatabaseImplement.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ComponentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cost = table.Column<double>(type: "float", nullable: false),
-                    EnginierId = table.Column<int>(type: "int", nullable: false)
+                    Cost = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,7 +46,8 @@ namespace FactoryDatabaseImplement.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Percent = table.Column<int>(type: "int", nullable: false)
+                    Percent = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,25 +75,12 @@ namespace FactoryDatabaseImplement.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PlanName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PlanName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Plans", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Stages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PlanId = table.Column<int>(type: "int", nullable: false),
-                    ReinforsedId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,7 +90,6 @@ namespace FactoryDatabaseImplement.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ReinforcedName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
                     EngenierId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -150,8 +137,7 @@ namespace FactoryDatabaseImplement.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PlanId = table.Column<int>(type: "int", nullable: false),
-                    ComponentId = table.Column<int>(type: "int", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false)
+                    ComponentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,14 +157,39 @@ namespace FactoryDatabaseImplement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Stages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlanId = table.Column<int>(type: "int", nullable: false),
+                    ReinforsedId = table.Column<int>(type: "int", nullable: false),
+                    ComponentId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Stages_Components_ComponentId",
+                        column: x => x.ComponentId,
+                        principalTable: "Components",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Stages_Plans_PlanId",
+                        column: x => x.PlanId,
+                        principalTable: "Plans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ReinforcedComponents",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ReinforcedId = table.Column<int>(type: "int", nullable: false),
-                    ComponentId = table.Column<int>(type: "int", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false)
+                    ComponentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -204,8 +215,7 @@ namespace FactoryDatabaseImplement.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LatheId = table.Column<int>(type: "int", nullable: false),
-                    ReinforcedId = table.Column<int>(type: "int", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false)
+                    ReinforcedId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -231,8 +241,7 @@ namespace FactoryDatabaseImplement.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PlanId = table.Column<int>(type: "int", nullable: false),
-                    LatheId = table.Column<int>(type: "int", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false)
+                    LatheId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -305,6 +314,16 @@ namespace FactoryDatabaseImplement.Migrations
                 name: "IX_Reinforceds_EngenierId",
                 table: "Reinforceds",
                 column: "EngenierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stages_ComponentId",
+                table: "Stages",
+                column: "ComponentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stages_PlanId",
+                table: "Stages",
+                column: "PlanId");
         }
 
         /// <inheritdoc />
@@ -329,13 +348,13 @@ namespace FactoryDatabaseImplement.Migrations
                 name: "Lathes");
 
             migrationBuilder.DropTable(
-                name: "Plans");
+                name: "Reinforceds");
 
             migrationBuilder.DropTable(
                 name: "Components");
 
             migrationBuilder.DropTable(
-                name: "Reinforceds");
+                name: "Plans");
 
             migrationBuilder.DropTable(
                 name: "LatheBusies");

@@ -14,7 +14,7 @@ namespace FactoryDatabaseImplement
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // TODO добавляйте свои
+                optionsBuilder.UseSqlServer(@"Data Source=SHADOWIK\SHADOWIK;Initial Catalog=Factory;Integrated Security=True;TrustServerCertificate=True");
             }
             base.OnConfiguring(optionsBuilder);
         }

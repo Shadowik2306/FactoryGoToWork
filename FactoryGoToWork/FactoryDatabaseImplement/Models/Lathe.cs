@@ -62,8 +62,6 @@ namespace FactoryDatabaseImplement.Models
             BusyId = BusyId,
             MasterId = MasterId,
 			LatheName = LatheName,
-            LatheReinforcedes = _latheReinforcedes,
-            
         };
 
         public void UpdateComponents(FactoryDatabase context, LatheBindingModel model)

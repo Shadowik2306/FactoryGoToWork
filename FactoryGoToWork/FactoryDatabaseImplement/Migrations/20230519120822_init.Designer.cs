@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FactoryDatabaseImplement.Migrations
 {
     [DbContext(typeof(FactoryDatabase))]
-    [Migration("20230402191647_initmigration2")]
-    partial class initmigration2
+    [Migration("20230519120822_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,9 +39,6 @@ namespace FactoryDatabaseImplement.Migrations
 
                     b.Property<double>("Cost")
                         .HasColumnType("float");
-
-                    b.Property<int>("EnginierId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -108,6 +105,9 @@ namespace FactoryDatabaseImplement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Percent")
                         .HasColumnType("int");
 
@@ -123,9 +123,6 @@ namespace FactoryDatabaseImplement.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
 
                     b.Property<int>("LatheId")
                         .HasColumnType("int");
@@ -179,6 +176,9 @@ namespace FactoryDatabaseImplement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("date")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Plans");
@@ -193,9 +193,6 @@ namespace FactoryDatabaseImplement.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ComponentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Count")
                         .HasColumnType("int");
 
                     b.Property<int>("PlanId")
@@ -217,9 +214,6 @@ namespace FactoryDatabaseImplement.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
 
                     b.Property<int>("LatheId")
                         .HasColumnType("int");
@@ -247,9 +241,6 @@ namespace FactoryDatabaseImplement.Migrations
                     b.Property<int>("EngenierId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
                     b.Property<string>("ReinforcedName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -270,9 +261,6 @@ namespace FactoryDatabaseImplement.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ComponentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Count")
                         .HasColumnType("int");
 
                     b.Property<int>("ReinforcedId")

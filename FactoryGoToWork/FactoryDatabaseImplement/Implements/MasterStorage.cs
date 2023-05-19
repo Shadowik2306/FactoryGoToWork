@@ -48,7 +48,7 @@ namespace FactoryDatabaseImplement.Implements
 			using var context = new FactoryDatabase();
 
 			return context.Masters
-					.FirstOrDefault(x => (!string.IsNullOrEmpty(model.Email) && x.Email == model.Email) ||
+					.FirstOrDefault(x => ((!string.IsNullOrEmpty(model.Email) && x.Email == model.Email) && (!string.IsNullOrEmpty(model.Password) && x.Password == model.Password)) ||
 										(model.Id.HasValue && x.Id == model.Id))
 					?.GetViewModel;
 		}
