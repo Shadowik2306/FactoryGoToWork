@@ -51,7 +51,7 @@ namespace FactoryBusinessLogic.BusinessLogics
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            _logger.LogInformation("ReadElement. Name:{Name}.Surname:{Surname}.Patronymic:{Patronymic}.Id:{ Id}", model.Name, model.Surname, model.Patronymic, model.Id);
+            _logger.LogInformation("ReadElement. Name:{Name}.Surname:{Surname}.Patronymic:{Patronymic}.Id:{ Id}", model?.Name, model?.Surname, model?.Patronymic, model?.Id);
             var element = _engenierStorage.GetElement(model);
             if (element == null)
             {

@@ -24,7 +24,7 @@ namespace PrecastConcretePlantClientApp.Controllers
             {
                 return Redirect("~/Home/Enter");
             }
-            return View(APIMaster.GetRequest<List<LatheViewModel>>($"api/main/getorders?clientId={APIMaster.Master.Id}"));
+            return View(APIMaster.GetRequest<List<LatheViewModel>>($"api/Read/getLathes"));
         }
 
         [HttpGet]
@@ -37,30 +37,6 @@ namespace PrecastConcretePlantClientApp.Controllers
             return View(APIMaster.Master);
         }
 
-        [HttpPost]
-        public void Privacy(string login, string password, string fio)
-        {
-            if (APIMaster.Master == null)
-            {
-                throw new Exception("Вы как суда попали? Суда вход только авторизованным");
-            }
-            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(fio))
-            {
-                throw new Exception("Введите логин, пароль и ФИО");
-            }
-            APIMaster.PostRequest("api/master/updatedata", new MasterBindingModel
-            {
-                Id = APIMaster.Master.Id,
-                Fio = fio,
-                Email = login,
-                Password = password
-            });
-
-            APIMaster.Master.Fio = fio;
-            APIMaster.Master.Email = login;
-            APIMaster.Master.Password = password;
-            Response.Redirect("Index");
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -81,7 +57,7 @@ namespace PrecastConcretePlantClientApp.Controllers
             {
                 throw new Exception("Введите логин и пароль");
             }
-            APIMaster.Master = APIMaster.GetRequest<MasterViewModel>($"api/master/login?login={login}&password={password}");
+            APIMaster.Master = APIMaster.GetRequest<MasterViewModel>($"api/Main/LoginMaster?login={login}&password={password}");
             if (APIMaster.Master == null)
             {
                 throw new Exception("Неверный логин/пароль");
@@ -102,7 +78,7 @@ namespace PrecastConcretePlantClientApp.Controllers
             {
                 throw new Exception("Введите логин, пароль и ФИО");
             }
-            APIMaster.PostRequest("api/master/register", new MasterBindingModel
+            APIMaster.PostRequest("api/Main/RegisterMaster", new MasterBindingModel
             {
                 Fio = fio,
                 Email = login,
@@ -115,22 +91,20 @@ namespace PrecastConcretePlantClientApp.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Reinforceds = APIMaster.GetRequest<List<ReinforcedViewModel>>("api/main/getlathelist");
             return View();
         }
 
         [HttpPost]
-        public void Create(int busy, string title)
+        public void Create(string title)
         {
             if (APIMaster.Master == null)
             {
                 throw new Exception("Вы как суда попали? Суда вход только авторизованным");
             }
-            APIMaster.PostRequest("api/main/createLathe", new LatheBindingModel
+            APIMaster.PostRequest("api/Main/CreateLathe", new LatheBindingModel
             {
                 MasterId = APIMaster.Master.Id,
-                LatheName = title,
-                BusyId = busy
+                LatheName = title
             });
             Response.Redirect("Index");
         }

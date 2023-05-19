@@ -6,5 +6,7 @@ namespace FactoryContracts.BindingModels
     {
         public int Id { get; set; }
         public string ComponentName { get; set; } = string.Empty;
+
+        public double Cost { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace FactoryContracts.BindingModels
 
         public int BusyId { get; set; }
 
-        public Dictionary<int, (IReinforcedModel, int)> LatheReinforcedes { get; set; } = new();
+        public Dictionary<int, IReinforcedModel> LatheReinforcedes { get; set; } = new();
 
         
     }

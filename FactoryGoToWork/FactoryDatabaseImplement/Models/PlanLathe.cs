@@ -17,8 +17,6 @@ namespace FactoryDatabaseImplement.Models
         [Required]
         public int LatheId { get; set; }
 
-        [Required]
-        public int Count { get; set; }
 
         public virtual Plan Plan { get; set; } = new();
 

@@ -4,6 +4,8 @@ using FactoryContracts.BusinessLogicsContracts;
 using FactoryContracts.SearchModels;
 using FactoryContracts.StoragesContracts;
 using FactoryContracts.ViewModels;
+using System.ComponentModel;
+using System.Linq.Expressions;
 
 namespace FactoryBusinessLogic.BusinessLogics
 {
@@ -11,10 +13,12 @@ namespace FactoryBusinessLogic.BusinessLogics
     {
         private readonly ILogger _logger;
         private readonly IReinforcedStorage _reinforcedStorage;
-        public ReinforcedLogic(ILogger<ReinforcedLogic> logger, IReinforcedStorage reinforcedStorage)
+        private readonly IComponentStorage _componentStorage;
+        public ReinforcedLogic(ILogger<ReinforcedLogic> logger, IReinforcedStorage reinforcedStorage, IComponentStorage componentStorage)
         {
             _logger = logger;
             _reinforcedStorage= reinforcedStorage;
+            _componentStorage = componentStorage;
         }
         public List<ReinforcedViewModel>? ReadList(ReinforcedSearchModel? model)
         {
@@ -34,7 +38,7 @@ namespace FactoryBusinessLogic.BusinessLogics
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            _logger.LogInformation("ReadElement. ReinforcedName:{ReinforcedName}.Id:{ Id}", model.ReinforcedName, model.Id);
+            _logger.LogInformation("ReadElement. ReinforcedName:{ReinforcedName}.Id:{ Id}", model?.ReinforcedName, model?.Id);
             var element = _reinforcedStorage.GetElement(model);
             if (element == null)
             {
@@ -75,6 +79,28 @@ namespace FactoryBusinessLogic.BusinessLogics
             }
             return true;
         }
+
+        public bool addComponent(int ReinforcedId, int ComponentId) {
+            try
+            {
+                var reinforced = _reinforcedStorage.GetElement(new ReinforcedSearchModel() { Id = ReinforcedId });
+                var model = new ReinforcedBindingModel()
+                {
+                    Id = reinforced.Id,
+                    ReinforcedName = reinforced.ReinforcedName,
+                    EngenierId = reinforced.EngenierId,
+                    ReinforcedComponents = reinforced.ReinforcedComponents,
+                };
+                var component = _componentStorage.GetElement(new ComponentSearchModel() { Id = ComponentId });
+                model.ReinforcedComponents.Add(component.Id, component);
+                Update(model);
+                return true;
+            }
+            catch (Exception ex) {
+                return false;
+            }
+            
+        }
         private void CheckModel(ReinforcedBindingModel model, bool withParams = true)
         {
             if (model == null)
@@ -89,7 +115,7 @@ namespace FactoryBusinessLogic.BusinessLogics
             {
                 throw new ArgumentNullException("Нет названия изделия", nameof(model.ReinforcedName));
             }
-            if(model.ReinforcedComponents==null || model.ReinforcedComponents.Count == 0)
+            if(model.ReinforcedComponents==null)
             {
                 throw new ArgumentNullException("Перечень компонентов не может быть пустым", nameof(model.ReinforcedComponents));
             }

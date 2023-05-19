@@ -14,8 +14,8 @@ namespace FactoryDatabaseImplement
         {
             if (!optionsBuilder.IsConfigured)
             {
-				optionsBuilder.UseSqlServer(); //todo привязывай данные
-			}
+                // TODO добавляйте свои
+            }
             base.OnConfiguring(optionsBuilder);
         }
 

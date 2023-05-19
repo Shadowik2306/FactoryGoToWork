@@ -32,7 +32,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 			}
 
 			_logger.LogInformation("ReadElement. MasterName:{Name}. MasterSurname:{Surname}. MasterPatronymic:{Patronymic}. Id:{Id}", 
-				model.Name, model.Surname, model.Patronymic, model?.Id);
+				model?.Name, model?.Surname, model?.Patronymic, model?.Id);
 
 			var element = _masterStorage.GetElement(model);
 
@@ -51,7 +51,7 @@ namespace FactoryBusinessLogic.BusinessLogics
 		public List<MasterViewModel>? ReadList(MasterSearchModel? model)
 		{
 			_logger.LogInformation("ReadList. MasterName:{Name}. MasterSurname:{Surname}. MasterPatronymic:{Patronymic}. Id:{Id}", 
-				model.Name, model.Surname, model.Patronymic, model?.Id);
+				model?.Name, model?.Surname, model?.Patronymic, model?.Id);
 
 			var list = model == null ? _masterStorage.GetFullList() : _masterStorage.GetFilteredList(model);
 

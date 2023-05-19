@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-APIMaster.Connect(builder.Configuration);//Тут коммент не работает
+APIMaster.Connect(builder.Configuration);
 
 
 // Configure the HTTP request pipeline.

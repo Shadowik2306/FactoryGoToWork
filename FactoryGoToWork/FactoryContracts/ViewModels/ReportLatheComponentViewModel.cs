@@ -10,8 +10,8 @@ namespace FactoryContracts.ViewModels
     {
         public string PlanName { get; set; } = string.Empty;
         public int TotalCount { get; set; }
-        public List<(string Component, int Count)> Components { get; set; } = new();
+        public List<string> Components { get; set; } = new();
 
-        public List<(string Component, int Count)> Lathes { get; set; } = new();
+        public List<string> Lathes { get; set; } = new();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FactoryContracts.BindingModels;
 using FactoryContracts.SearchModels;
+using FactoryContracts.StoragesContracts;
 using FactoryContracts.ViewModels;
 using FactoryDatabaseImplement.Models;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FactoryDatabaseImplement.Implements
 {
-	public class EngenierStorage
+	public class EngenierStorage : IEngenierStorage
 	{
         public EngenierViewModel? Delete(EngenierBindingModel model)
         {

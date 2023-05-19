@@ -11,10 +11,12 @@ namespace FactoryBusinessLogic.BusinessLogics
     {
         private readonly ILogger _logger;
         private readonly ILatheStorage _latheStorage;
-        public LatheLogic(ILogger<ComponentLogic> logger, ILatheStorage latheStorage)
+        private readonly IReinforcedStorage _reinforcedStorage;
+        public LatheLogic(ILogger<ComponentLogic> logger, ILatheStorage latheStorage, IReinforcedStorage reinforcedStorage)
         {
             _logger = logger;
             _latheStorage = latheStorage;
+            _reinforcedStorage = reinforcedStorage;
         }
         public List<LatheViewModel>? ReadList(LatheSearchModel? model)
         {
@@ -89,7 +91,7 @@ namespace FactoryBusinessLogic.BusinessLogics
             {
                 throw new ArgumentNullException("Нет названия cтанка", nameof(model.LatheName));
             }
-            _logger.LogInformation("Component. ComponentName:{LatheName}.Id: { Id}", model.LatheName, model.Id);
+            _logger.LogInformation("Component. ComponentName:{LatheName}.Id: { Id}", model?.LatheName, model?.Id);
             var element = _latheStorage.GetElement(new LatheSearchModel
             {
                 LatheName = model.LatheName
@@ -97,6 +99,30 @@ namespace FactoryBusinessLogic.BusinessLogics
             if (element != null && element.Id != model.Id)
             {
                 throw new InvalidOperationException("Компонент с таким названием уже есть");
+            }
+        }
+
+        public bool addReinforced(int latheId, int ReinforcedId)
+        {
+            try
+            {
+                var lathe = _latheStorage.GetElement(new LatheSearchModel() { Id = latheId });
+                var model = new LatheBindingModel()
+                {
+                    Id = lathe.Id,
+                    LatheName = lathe.LatheName,
+                    LatheReinforcedes = lathe.LatheReinforcedes,
+                    BusyId = lathe.BusyId,
+                    MasterId = lathe.MasterId
+                };
+                var component = _reinforcedStorage.GetElement(new ReinforcedSearchModel() { Id = ReinforcedId });
+                model.LatheReinforcedes.Add(component.Id, component);
+                Update(model);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }

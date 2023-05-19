@@ -10,6 +10,6 @@ namespace FactoryDataModels.Models
     {
         string ReinforcedName { get; }
         int EngenierId { get; }
-        Dictionary<int, (IComponentModel, int)> ReinforcedComponents { get; }
+        Dictionary<int, IComponentModel> ReinforcedComponents { get; }
     }
 }

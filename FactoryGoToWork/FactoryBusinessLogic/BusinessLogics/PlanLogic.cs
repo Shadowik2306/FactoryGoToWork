@@ -11,10 +11,14 @@ namespace FactoryBusinessLogic.BusinessLogics
     {
         private readonly ILogger _logger;
         private readonly IPlanStorage _planStorage;
-        public PlanLogic(ILogger<PlanLogic> logger, IPlanStorage planStorage)
+        private readonly IComponentStorage componentStorage;
+        private readonly ILatheStorage latheStorage;
+        public PlanLogic(ILogger<PlanLogic> logger, IPlanStorage planStorage, IComponentStorage componentStorage, ILatheStorage latheStorage)
         {
             _logger = logger;
             _planStorage = planStorage;
+            this.componentStorage = componentStorage;
+            this.latheStorage = latheStorage;
         }
         public List<PlanViewModel>? ReadList(PlanSearchModel? model)
         {
@@ -34,7 +38,7 @@ namespace FactoryBusinessLogic.BusinessLogics
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            _logger.LogInformation("ReadElement. ComponentName:{PlanName}.Id:{ Id}", model.PlanName, model.Id);
+            _logger.LogInformation("ReadElement. ComponentName:{PlanName}.Id:{ Id}", model?.PlanName, model.Id);
             var element = _planStorage.GetElement(model);
             if (element == null)
             {
@@ -98,6 +102,58 @@ namespace FactoryBusinessLogic.BusinessLogics
             {
                 throw new InvalidOperationException("Компонент с таким названием уже есть");
             }
+        }
+
+
+        public bool addComponent(int planId, int ComponentId)
+        {
+            try
+            {
+                var plan = _planStorage.GetElement(new PlanSearchModel() { Id = planId });
+                var model = new PlanBindingModel()
+                {
+                    PlanName = plan.PlanName,
+                    Id = plan.Id,
+                    PlanLathes = plan.PlanLathes,
+                    date = plan.date,
+                    PlanComponents = plan.PlanComponents
+                };
+                var component = componentStorage.GetElement(new ComponentSearchModel() { Id = ComponentId });
+                model.PlanComponents.Add(component.Id, component);
+                
+                Update(model);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        public bool addLathe(int planId, int latheId)
+        {
+            try
+            {
+                var plan = _planStorage.GetElement(new PlanSearchModel() { Id = planId });
+                var model = new PlanBindingModel()
+                {
+                    PlanName = plan.PlanName,
+                    Id = plan.Id,
+                    PlanLathes = plan.PlanLathes,
+                    date = plan.date,
+                    PlanComponents = plan.PlanComponents
+                };
+                var component = latheStorage.GetElement(new LatheSearchModel() { Id = latheId });
+                model.PlanLathes.Add(component.Id, component);
+                Update(model);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
         }
     }
 }

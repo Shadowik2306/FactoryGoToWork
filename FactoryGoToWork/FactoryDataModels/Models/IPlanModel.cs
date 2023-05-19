@@ -10,9 +10,9 @@ namespace FactoryDataModels.Models
     {
         string PlanName { get; }
 
-        Dictionary<int, (ILatheModel, int)> PlanLathes { get; }
+        Dictionary<int, ILatheModel> PlanLathes { get; }
 
-        Dictionary<int, (IComponentModel, int)> PlanComponents { get; }
+        Dictionary<int, IComponentModel> PlanComponents { get; }
 
         DateTime date { get; }
     }

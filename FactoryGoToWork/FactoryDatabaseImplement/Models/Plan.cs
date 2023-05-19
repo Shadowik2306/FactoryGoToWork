@@ -21,18 +21,18 @@ namespace FactoryDatabaseImplement.Models
         public DateTime date { get; set; }
 
         [Required]
-        private Dictionary<int, (ILatheModel, int)>? _planLathes { get; set; } = null;
+        private Dictionary<int, ILatheModel>? _planLathes { get; set; } = null;
 
         
         [NotMapped]
-        public Dictionary<int, (ILatheModel, int)> PlanLathes
+        public Dictionary<int, ILatheModel> PlanLathes
         {
             get
             {
                 if (_planLathes == null)
                 {
                     _planLathes = Lathes.ToDictionary(recPL => recPL.LatheId, recPL =>
-                    (recPL.Lathe as ILatheModel, recPL.Count));
+                    recPL.Lathe as ILatheModel);
                 }
                 return _planLathes;
             }
@@ -42,17 +42,17 @@ namespace FactoryDatabaseImplement.Models
         public virtual List<PlanLathe> Lathes { get; set; } = new();
 
         [Required]
-        private Dictionary<int, (IComponentModel, int)> _planComponents { get; set; } = null;
+        private Dictionary<int, IComponentModel> _planComponents { get; set; } = null;
 
         [NotMapped]
-        public Dictionary<int, (IComponentModel, int)> PlanComponents
+        public Dictionary<int, IComponentModel> PlanComponents
         {
             get
             {
                 if (_planComponents == null)
                 {
                     _planComponents = Components.ToDictionary(recPL => recPL.ComponentId, recPL =>
-                    (recPL.Component as IComponentModel, recPL.Count));
+                    recPL.Component as IComponentModel);
                 }
                 return _planComponents;
             }
@@ -92,11 +92,9 @@ namespace FactoryDatabaseImplement.Models
             var PlanLathes = context.PlanLathes.Where(rec => rec.PlanId == model.Id).ToList();
             if (PlanLathes != null && PlanLathes.Count > 0)
             {
-                context.PlanLathes.RemoveRange(PlanLathes.Where(rec => !model.PlanLathes.ContainsKey(rec.LatheId)));
                 context.SaveChanges();
                 foreach (var updateComponent in PlanLathes)
                 {
-                    updateComponent.Count = model.PlanLathes[updateComponent.LatheId].Item2;
                     model.PlanLathes.Remove(updateComponent.LatheId);
                 }
                 context.SaveChanges();
@@ -107,8 +105,7 @@ namespace FactoryDatabaseImplement.Models
                 context.PlanLathes.Add(new PlanLathe
                 {
                     Plan = Plans,
-                    Lathe = context.Lathes.First(x => x.Id == pc.Key),
-                    Count = pc.Value.Item2
+                    Lathe = context.Lathes.First(x => x.Id == pc.Key)
                 });
                 context.SaveChanges();
             }
@@ -120,12 +117,10 @@ namespace FactoryDatabaseImplement.Models
             var PlanComponents = context.PlanComponents.Where(rec => rec.PlanId == model.Id).ToList();
             if (PlanComponents != null && PlanComponents.Count > 0)
             {
-                context.PlanComponents.RemoveRange(PlanComponents.Where(rec => !model.PlanComponents.ContainsKey(rec.ComponentId)));
                 context.SaveChanges();
                 PlanComponents = context.PlanComponents.Where(rec => rec.PlanId == model.Id).ToList();
                 foreach (var updateComponent in PlanComponents)
                 {
-                    updateComponent.Count = model.PlanComponents[updateComponent.ComponentId].Item2;
                     model.PlanComponents.Remove(updateComponent.ComponentId);
                 }
                 context.SaveChanges();
@@ -137,7 +132,6 @@ namespace FactoryDatabaseImplement.Models
                 {
                     Plan = Plans,
                     Component = context.Components.First(x => x.Id == pc.Key),
-                    Count = pc.Value.Item2
                 });
                 context.SaveChanges();
             }

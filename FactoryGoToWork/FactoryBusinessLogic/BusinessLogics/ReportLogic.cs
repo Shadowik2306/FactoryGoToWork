@@ -4,6 +4,7 @@ using FactoryContracts.BusinessLogicsContracts;
 using FactoryContracts.SearchModels;
 using FactoryContracts.StoragesContracts;
 using FactoryContracts.ViewModels;
+using FactoryDataModels.Models;
 using PrecastConcretePlantContracts.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -35,8 +36,8 @@ namespace FactoryBusinessLogic.BusinessLogics
             return _planStorage.GetFilteredList(new PlanSearchModel { DateFrom = model.DateFrom, DateTo = model.DateTo})
                 .Select(x => new ReportLatheComponentViewModel { 
                     PlanName = x.PlanName,
-                    Components = x.PlanComponents.Select(x => (x.Value.Item1.ComponentName, x.Value.Item2)).ToList(),
-                    Lathes = x.PlanLathes.Select(x => (x.Value.Item1.LatheName, x.Value.Item2)).ToList()
+                    Components = x.PlanComponents.Select(x => x.Value.ComponentName).ToList(),
+                    Lathes = x.PlanLathes.Select(x => x.Value.LatheName).ToList()
                 })
             .ToList();
         }
@@ -51,17 +52,18 @@ namespace FactoryBusinessLogic.BusinessLogics
                     .ToList();
         }
 
-        public void SaveOrdersToPdfFile(ReportBindingModel model)
+
+        public void SaveToPdfFile(ReportBindingModel model)
         {
             throw new NotImplementedException();
         }
 
-        public void SaveReinforcedComponentToExcelFile(ReportBindingModel model)
+        public void SaveToExcelFile(ReportBindingModel model)
         {
             throw new NotImplementedException();
         }
 
-        public void SaveReinforcedesToWordFile(ReportBindingModel model)
+        public void SaveToWordFile(ReportBindingModel model)
         {
             throw new NotImplementedException();
         }

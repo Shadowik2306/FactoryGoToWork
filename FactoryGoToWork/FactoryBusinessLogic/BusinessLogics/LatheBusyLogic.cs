@@ -34,7 +34,7 @@ namespace FactoryBusinessLogic.BusinessLogics
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            _logger.LogInformation("ReadElement. ComponentName:{Percent}.Id:{ Id}", model.Percent, model.Id);
+            _logger.LogInformation("ReadElement. ComponentName:{Percent}.Id:{ Id}", model?.Percent, model?.Id);
             var element = _latheBusyStorage.GetElement(model);
             if (element == null)
             {

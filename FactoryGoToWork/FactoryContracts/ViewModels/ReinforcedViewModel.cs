@@ -11,6 +11,6 @@ namespace FactoryContracts.ViewModels
 
         public int EngenierId { get; set; }
 
-        public Dictionary<int, (IComponentModel, int)> ReinforcedComponents { get;set;} = new();
+        public Dictionary<int, IComponentModel> ReinforcedComponents { get; set;} = new();
     }
 }

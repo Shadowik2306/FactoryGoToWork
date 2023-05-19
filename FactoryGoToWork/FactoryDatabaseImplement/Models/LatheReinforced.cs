@@ -14,8 +14,6 @@ namespace FactoryDatabaseImplement.Models
         public int LatheId { get; set; }
         [Required]
         public int ReinforcedId { get; set; }
-        [Required]
-        public int Count { get; set; }
 
         public virtual Lathe Lathe { get; set; } = new();
 

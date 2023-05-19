@@ -23,15 +23,15 @@ namespace FactoryDatabaseImplement.Models
         [Required]
         public int BusyId { get; set; }
         [Required]
-		private Dictionary<int, (IReinforcedModel, int)>? _latheReinforcedes = null;
+		private Dictionary<int, IReinforcedModel>? _latheReinforcedes = null;
 
 		[NotMapped]
-        public Dictionary<int, (IReinforcedModel, int)> LatheReinforcedes {
+        public Dictionary<int, IReinforcedModel> LatheReinforcedes {
 			get {
                 if (_latheReinforcedes == null)
                 {
                     _latheReinforcedes = Reinforceds.ToDictionary(recLR => recLR.ReinforcedId, recLR =>
-                    (recLR.Reinforced as IReinforcedModel, recLR.Count));
+                    recLR.Reinforced as IReinforcedModel);
                 }
                 return _latheReinforcedes;
             }
@@ -45,6 +45,8 @@ namespace FactoryDatabaseImplement.Models
 			{
 				Id = model.Id,
 				LatheName = model.LatheName,
+                MasterId = model.MasterId,
+                BusyId = model.BusyId
 			};
 		}
 
@@ -57,8 +59,12 @@ namespace FactoryDatabaseImplement.Models
 		public LatheViewModel GetViewModel => new()
 		{
 			Id = Id,
+            BusyId = BusyId,
+            MasterId = MasterId,
 			LatheName = LatheName,
-		};
+            LatheReinforcedes = _latheReinforcedes,
+            
+        };
 
         public void UpdateComponents(FactoryDatabase context, LatheBindingModel model)
         {
@@ -70,7 +76,6 @@ namespace FactoryDatabaseImplement.Models
                 LatheReinforsed = context.LatheReinforcedes.Where(rec => rec.LatheId == model.Id).ToList();
                 foreach (var updateComponent in LatheReinforsed)
                 {
-                    updateComponent.Count = model.LatheReinforcedes[updateComponent.LatheId].Item2;
                     model.LatheReinforcedes.Remove(updateComponent.LatheId);
                 }
                 context.SaveChanges();
@@ -82,7 +87,6 @@ namespace FactoryDatabaseImplement.Models
                 {
                     Lathe = Lathe,
                     Reinforced = context.Reinforceds.First(x => x.Id == pc.Key),
-                    Count = pc.Value.Item2
                 });
                 context.SaveChanges();
             }

@@ -14,8 +14,8 @@ namespace FactoryContracts.BusinessLogicsContracts
     {
         List<ReportLatheComponentViewModel> GetPlanLathesAndComponents(ReportBindingModel model);
         List<ReportLatheViewModel> GetLatheByBusy(ReportBindingModel model);
-        void SaveReinforcedesToWordFile(ReportBindingModel model);
-        void SaveReinforcedComponentToExcelFile(ReportBindingModel model);
-        void SaveOrdersToPdfFile(ReportBindingModel model);
+        void SaveToWordFile(ReportBindingModel model);
+        void SaveToExcelFile(ReportBindingModel model);
+        void SaveToPdfFile(ReportBindingModel model);
     }
 }

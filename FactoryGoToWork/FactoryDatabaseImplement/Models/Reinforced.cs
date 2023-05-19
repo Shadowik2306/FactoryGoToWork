@@ -19,22 +19,19 @@ namespace FactoryDatabaseImplement.Models
         public string ReinforcedName { get; set; } = string.Empty;
 
         [Required]
-        public double Price { get; set; }
-
-        [Required]
         public int EngenierId { get; set; }
 
-        private Dictionary<int, (IComponentModel, int)>? _reinforcedComponents = null;
+        private Dictionary<int, IComponentModel>? _reinforcedComponents = null;
 
         [NotMapped]
-        public Dictionary<int, (IComponentModel, int)> ReinforcedComponents
+        public Dictionary<int, IComponentModel> ReinforcedComponents
         {
             get
             {
                 if (_reinforcedComponents == null)
                 {
                     _reinforcedComponents = Components
-                            .ToDictionary(recPC => recPC.ComponentId, recPC => (recPC.Component as IComponentModel, recPC.Count));
+                            .ToDictionary(recPC => recPC.ComponentId, recPC => recPC.Component as IComponentModel);
                 }
                 return _reinforcedComponents;
             }
@@ -50,11 +47,7 @@ namespace FactoryDatabaseImplement.Models
             {
                 Id = model.Id,
                 ReinforcedName = model.ReinforcedName,
-                Components = model.ReinforcedComponents.Select(x => new ReinforcedComponent
-                {
-                    Component = context.Components.First(y => y.Id == x.Key),
-                    Count = x.Value.Item2
-                }).ToList()
+                EngenierId = model.EngenierId,
             };
         }
 
@@ -67,7 +60,6 @@ namespace FactoryDatabaseImplement.Models
         {
             Id = Id,
             ReinforcedName = ReinforcedName,
-            ReinforcedComponents = ReinforcedComponents
         };
 
         public void UpdateComponents(FactoryDatabase context, ReinforcedBindingModel model)
@@ -75,12 +67,9 @@ namespace FactoryDatabaseImplement.Models
             var ReinforcedComponents = context.ReinforcedComponents.Where(rec => rec.ReinforcedId == model.Id).ToList();
             if (ReinforcedComponents != null && ReinforcedComponents.Count > 0)
             {  
-                context.ReinforcedComponents.RemoveRange(ReinforcedComponents.Where(rec => !model.ReinforcedComponents.ContainsKey(rec.ComponentId)));
                 context.SaveChanges();
-                ReinforcedComponents = context.ReinforcedComponents.Where(rec => rec.ReinforcedId == model.Id).ToList();
                 foreach (var updateComponent in ReinforcedComponents)
                 {
-                    updateComponent.Count = model.ReinforcedComponents[updateComponent.ComponentId].Item2;
                     model.ReinforcedComponents.Remove(updateComponent.ComponentId);
                 }
                 context.SaveChanges();
@@ -92,7 +81,6 @@ namespace FactoryDatabaseImplement.Models
                 {
                     Reinforced = Reinforced,
                     Component = context.Components.First(x => x.Id == pc.Key),
-                    Count = pc.Value.Item2
                 });
                 context.SaveChanges();
             }

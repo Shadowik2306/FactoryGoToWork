@@ -3,6 +3,7 @@ using FactoryContracts.SearchModels;
 using FactoryContracts.StoragesContracts;
 using FactoryContracts.ViewModels;
 using FactoryDatabaseImplement.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +37,7 @@ namespace FactoryDatabaseImplement.Implements
                 return null;
             }
             using var context = new FactoryDatabase();
-            return context.Lathes.FirstOrDefault(x => 
-            (!string.IsNullOrEmpty(model.LatheName) && x.LatheName == model.LatheName) || 
-            (model.Id.HasValue && x.Id == model.Id))
+            return context.Lathes.FirstOrDefault(x => x.Id == model.Id)
                 ?.GetViewModel;
         }
 

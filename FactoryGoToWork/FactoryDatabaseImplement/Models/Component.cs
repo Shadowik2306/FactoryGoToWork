@@ -22,8 +22,6 @@ namespace FactoryDatabaseImplement.Models
         [Required]
         public double Cost { get; set; }
 
-        [Required]
-        public int EnginierId { get; set; }
 
         [ForeignKey("ComponentId")]
         public virtual List<ReinforcedComponent> ReinforcedComponents { get; set; } = new();
@@ -38,6 +36,7 @@ namespace FactoryDatabaseImplement.Models
             {
                 Id = model.Id,
                 ComponentName = model.ComponentName,
+                Cost = model.Cost,
             };
         }
 
