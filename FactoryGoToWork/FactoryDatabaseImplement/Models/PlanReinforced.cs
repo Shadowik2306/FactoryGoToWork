@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace FactoryDatabaseImplement.Models
 {
-    public class ReinforcedComponent
+    public class PlanReinforced
     {
         public int Id { get; set; }
 
         [Required]
-        public int ReinforcedId { get; set; }
+        public int PlanId { get; set; }
 
         [Required]
-        public int ComponentId { get; set; }
+        public int ReinforceId { get; set; }
+		[Required]
+		public int Count { get; set; }
 
-        public virtual Component Component { get; set; } = new();
+		public virtual Plan Plan { get; set; } = new();
 
         public virtual Reinforced Reinforced { get; set; } = new();
     }

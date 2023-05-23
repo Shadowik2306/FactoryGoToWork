@@ -22,73 +22,132 @@ namespace FactoryDatabaseImplement.Models
         public int MasterId { get; set; }
         [Required]
         public int BusyId { get; set; }
-        [Required]
-		private Dictionary<int, IReinforcedModel>? _latheReinforcedes = null;
 
+		private Dictionary<int, (IReinforcedModel, int)>?_latheReinforcedes { get; set; } = null;
 		[NotMapped]
-        public Dictionary<int, IReinforcedModel> LatheReinforcedes {
-			get {
-                if (_latheReinforcedes == null)
-                {
-                    _latheReinforcedes = Reinforceds.ToDictionary(recLR => recLR.ReinforcedId, recLR =>
-                    recLR.Reinforced as IReinforcedModel);
-                }
-                return _latheReinforcedes;
-            }
+		public Dictionary<int, (IReinforcedModel, int)> LatheReinforcedes
+		{
+			get
+			{
+				if (_latheReinforcedes == null)
+				{
+					_latheReinforcedes = Reinforcedes.
+						ToDictionary(recLR => recLR.ReinforcedId, recLR => (recLR.Reinforced as IReinforcedModel, recLR.Count));
+				}
+				return _latheReinforcedes;
+			}
 		}
-        [ForeignKey("LatheId")]
-        public virtual List<LatheReinforced> Reinforceds { get; set; } = new();
+		[NotMapped]
+		public virtual List<LatheReinforced> Reinforcedes { get; set; } = new();
 
-        public static Lathe Create(FactoryDatabase context, LatheBindingModel model)
+		private Dictionary<int, (IComponentModel, int)>? _latheComponents { get; set; } = null;
+		[NotMapped]
+		public Dictionary<int, (IComponentModel, int)> LatheComponents
+		{
+			get
+			{
+				if (_latheComponents == null)
+				{
+					_latheComponents = Components.ToDictionary(recWM => recWM.ComponentId, recWM =>
+					(recWM.Component as IComponentModel, recWM.Count));
+				}
+				return _latheComponents;
+			}
+		}
+		[ForeignKey("LatheId")]
+		public virtual List<LatheComponent> Components { get; set; } = new();
+
+		public static Lathe Create(FactoryDatabase context, LatheBindingModel model)
 		{
 			return new Lathe()
 			{
 				Id = model.Id,
-				LatheName = model.LatheName,
-                MasterId = model.MasterId,
-                BusyId = model.BusyId
+				MasterId = model.MasterId,
+				BusyId = model.BusyId,
+				Reinforcedes = model.LatheReinforcedes.Select(x => new LatheReinforced
+				{
+					Reinforced = context.Reinforceds.First(y => y.Id == x.Key),
+					Count = x.Value.Item2
+				}).ToList(),
+				Components = model.LatheComponents.Select(x => new LatheComponent
+				{
+					Component = context.Components.First(y => y.Id == x.Key),
+					Count = x.Value.Item2
+				}).ToList()
 			};
 		}
 
 		public void Update(LatheBindingModel model)
 		{
-			Id = model.Id;
 			LatheName = model.LatheName;
 		}
 
 		public LatheViewModel GetViewModel => new()
 		{
 			Id = Id,
-            BusyId = BusyId,
-            MasterId = MasterId,
 			LatheName = LatheName,
-        };
+			MasterId = MasterId,
+			BusyId = BusyId,
+			LatheComponents = LatheComponents,
+			LatheReinforcedes = LatheReinforcedes
+		};
 
-        public void UpdateComponents(FactoryDatabase context, LatheBindingModel model)
-        {
-            var LatheReinforsed = context.LatheReinforcedes.Where(rec => rec.LatheId == model.Id).ToList();
-            if (LatheReinforsed != null && LatheReinforsed.Count > 0)
-            {
-                context.LatheReinforcedes.RemoveRange(LatheReinforsed.Where(rec => !model.LatheReinforcedes.ContainsKey(rec.LatheId)));
-                context.SaveChanges();
-                LatheReinforsed = context.LatheReinforcedes.Where(rec => rec.LatheId == model.Id).ToList();
-                foreach (var updateComponent in LatheReinforsed)
-                {
-                    model.LatheReinforcedes.Remove(updateComponent.LatheId);
-                }
-                context.SaveChanges();
-            }
-            var Lathe = context.Lathes.First(x => x.Id == Id);
-            foreach (var pc in model.LatheReinforcedes)
-            {
-                context.LatheReinforcedes.Add(new LatheReinforced
-                {
-                    Lathe = Lathe,
-                    Reinforced = context.Reinforceds.First(x => x.Id == pc.Key),
-                });
-                context.SaveChanges();
-            }
-            _latheReinforcedes = null;
-        }
-    }
+
+
+		public void UpdateReinforcedes(FactoryDatabase context, LatheBindingModel model)
+		{
+			var LatheReinforcedes = context.LatheReinforcedes.Where(rec => rec.LatheId == model.Id).ToList();
+			if (LatheReinforcedes != null && LatheReinforcedes.Count > 0)
+			{
+				context.LatheReinforcedes.RemoveRange(LatheReinforcedes.Where(rec => !model.LatheReinforcedes.ContainsKey(rec.ReinforcedId)));
+				context.SaveChanges();
+				foreach (var updateComponent in LatheReinforcedes)
+				{
+					updateComponent.Count = model.LatheReinforcedes[updateComponent.ReinforcedId].Item2;
+					model.LatheReinforcedes.Remove(updateComponent.ReinforcedId);
+				}
+				context.SaveChanges();
+			}
+			var Lathe = context.Lathes.First(x => x.Id == Id);
+			foreach (var pc in model.LatheReinforcedes)
+			{
+				context.LatheReinforcedes.Add(new LatheReinforced
+				{
+					Lathe = Lathe,
+					Reinforced = context.Reinforceds.First(x => x.Id == pc.Key),
+					Count = pc.Value.Item2
+				});
+				context.SaveChanges();
+			}
+			_latheReinforcedes = null;
+		}
+
+		public void UpdateComponents(FactoryDatabase context, LatheBindingModel model)
+		{
+			var LatheComponent = context.LatheComponents.Where(rec => rec.LatheId == model.Id).ToList();
+			if (LatheComponent != null && LatheComponent.Count > 0)
+			{
+				context.LatheComponents.RemoveRange(LatheComponent.Where(rec => !model.LatheComponents.ContainsKey(rec.ComponentId)));
+				context.SaveChanges();
+				foreach (var updateComponent in LatheComponent)
+				{
+					updateComponent.Count = model.LatheComponents[updateComponent.ComponentId].Item2;
+					model.LatheComponents.Remove(updateComponent.ComponentId);
+				}
+				context.SaveChanges();
+			}
+			var Lathe = context.Lathes.First(x => x.Id == Id);
+			foreach (var pc in model.LatheComponents)
+			{
+				context.LatheComponents.Add(new LatheComponent
+				{
+					Lathe = Lathe,
+					Component = context.Components.First(x => x.Id == pc.Key),
+					Count = pc.Value.Item2
+				});
+				context.SaveChanges();
+			}
+			_latheComponents = null;
+		}
+	}
 }

@@ -12,5 +12,8 @@ namespace FactoryContracts.ViewModels
         [DisplayName("Цена")]
         public double Cost { get; set; }
 
-    }
+		public int EngenierId { get; set; }
+
+        public Dictionary<int, (IPlanModel, int)> ComponentPlans { get; set; } = new();
+	}
 }

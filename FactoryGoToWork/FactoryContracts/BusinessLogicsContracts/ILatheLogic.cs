@@ -11,7 +11,5 @@ namespace FactoryContracts.BusinessLogicsContracts
         bool Create(LatheBindingModel model);
         bool Update(LatheBindingModel model);
         bool Delete(LatheBindingModel model);
-
-        bool addReinforced(int latheId, int ReinforcedId);
     }
 }

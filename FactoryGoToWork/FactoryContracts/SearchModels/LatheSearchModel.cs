@@ -12,8 +12,8 @@ namespace FactoryContracts.SearchModels
 
         public int? BusyId { get; set; }
 
-        public Dictionary<int, IReinforcedModel>? LatheReinforcedes { get; set; } 
+        public Dictionary<int, (IReinforcedModel, int)>? LatheReinforcedes { get; set; }
 
-        
-    }
+		public Dictionary<int, (IComponentModel, int)>? LatheComponents { get; set;  }
+	}
 }

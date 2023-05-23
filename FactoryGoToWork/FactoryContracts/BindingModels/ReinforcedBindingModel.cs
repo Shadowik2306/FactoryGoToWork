@@ -6,9 +6,5 @@ namespace FactoryContracts.BindingModels
     {
         public int Id { get; set; } 
         public string ReinforcedName { get; set; } = string.Empty;
-
-        public int EngenierId { get; set; }
-        public Dictionary<int, IComponentModel> ReinforcedComponents { get; set; } = new();
-
     }
 }

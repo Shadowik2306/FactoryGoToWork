@@ -18,9 +18,8 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
         public List<ReinforcedViewModel> GetFullList()
         {
             using var context = new FactoryDatabase();
-            return context.Reinforceds.Include(x => x.Components).ThenInclude(x => x.Component).ToList()
-                    .Select(x => x.GetViewModel).ToList();
-        }
+			return context.Reinforceds.Select(x => x.GetViewModel).ToList();
+		}
 
         public List<ReinforcedViewModel> GetFilteredList(ReinforcedSearchModel model)
         {
@@ -29,28 +28,23 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
                 return new();
             }
             using var context = new FactoryDatabase();
-            return context.Reinforceds.Include(x => x.Components).ThenInclude(x => x.Component)
-                    .Where(x => x.ReinforcedName.Contains(model.ReinforcedName)).ToList().Select(x => x.GetViewModel).ToList();
-        }
+			return context.Reinforceds.Select(x => x.GetViewModel).ToList();
+		}
 
         public ReinforcedViewModel? GetElement(ReinforcedSearchModel model)
         {
-            if (string.IsNullOrEmpty(model.ReinforcedName) && !model.Id.HasValue)
+            if (!model.Id.HasValue)
             {
                 return null;
             }
             using var context = new FactoryDatabase();
-            return context.Reinforceds.Include(x => x.Components).ThenInclude(x => x.Component)
-                .FirstOrDefault(x => 
-                (!string.IsNullOrEmpty(model.ReinforcedName) && x.ReinforcedName == model.ReinforcedName) ||
-                (model.Id.HasValue && x.Id == model.Id))
-                    ?.GetViewModel;
-        }
+			return context.Reinforceds.FirstOrDefault(x => (model.Id.HasValue && x.Id == model.Id))?.GetViewModel;
+		}
 
         public ReinforcedViewModel? Insert(ReinforcedBindingModel model)
         {
             using var context = new FactoryDatabase();
-            var newReinforced = Reinforced.Create(context, model);
+            var newReinforced = Reinforced.Create(model);
             if (newReinforced == null)
             {
                 return null;
@@ -73,7 +67,6 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
                 }
                 Reinforced.Update(model);
                 context.SaveChanges();
-                Reinforced.UpdateComponents(context, model);
                 transaction.Commit();
                 return Reinforced.GetViewModel;
             }
@@ -87,14 +80,14 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
         public ReinforcedViewModel? Delete(ReinforcedBindingModel model)
         {
             using var context = new FactoryDatabase();
-            var element = context.Reinforceds.Include(x => x.Components).FirstOrDefault(rec => rec.Id == model.Id);
-            if (element != null)
-            {
-                context.Reinforceds.Remove(element);
-                context.SaveChanges();
-                return element.GetViewModel;
-            }
-            return null;
-        }
+			var reinforced = context.Reinforceds.FirstOrDefault(x => x.Id == model.Id);
+			if (reinforced != null)
+			{
+				context.Reinforceds.Remove(reinforced);
+				context.SaveChanges();
+				return reinforced.GetViewModel;
+			}
+			return null;
+		}
     }
 }

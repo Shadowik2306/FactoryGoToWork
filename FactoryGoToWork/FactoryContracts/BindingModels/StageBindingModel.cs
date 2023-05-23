@@ -8,6 +8,10 @@ namespace FactoryContracts.BindingModels
 
         public int PlanId { get; set; }
 
-        public int ReinforsedId { get; set; }
-    }
+		public string Name { get; set; } = string.Empty;
+
+		public DateTime StartDate { get; set; }
+
+		public DateTime EndDate { get; set; }
+	}
 }

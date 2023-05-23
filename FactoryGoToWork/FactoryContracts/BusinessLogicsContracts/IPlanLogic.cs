@@ -11,9 +11,5 @@ namespace FactoryContracts.BusinessLogicsContracts
         bool Create(PlanBindingModel model);
         bool Update(PlanBindingModel model);
         bool Delete(PlanBindingModel model);
-
-        public bool addComponent(int planId, int ComponentId);
-
-        public bool addLathe(int planId, int LatheId);
     }
 }

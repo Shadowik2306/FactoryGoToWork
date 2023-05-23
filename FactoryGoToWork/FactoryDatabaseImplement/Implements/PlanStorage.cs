@@ -18,9 +18,9 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
         public List<PlanViewModel> GetFullList()
         {
             using var context = new FactoryDatabase();
-            return context.Plans.Include(x => x.Components).ThenInclude(x => x.Component).Include(x => x.Lathes).ThenInclude(x => x.Lathe).ToList()
-                    .Select(x => x.GetViewModel).ToList();
-        }
+			return context.Plans.Include(x => x.Reinforceds).ThenInclude(x => x.Reinforced).ToList()
+					.Select(x => x.GetViewModel).ToList();
+		}
 
         public List<PlanViewModel> GetFilteredList(PlanSearchModel model)
         {
@@ -29,9 +29,9 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
                 return new();
             }
             using var context = new FactoryDatabase();
-            return context.Plans.Include(x => x.Components).ThenInclude(x => x.Component).Include(x => x.Lathes).ThenInclude(x => x.Lathe)
-                    .Where(x => x.PlanName.Contains(model.PlanName)).ToList().Select(x => x.GetViewModel).ToList();
-        }
+			return context.Plans.Include(x => x.Reinforceds).ThenInclude(x => x.Reinforced)
+					.Where(x => x.PlanName.Contains(model.PlanName)).ToList().Select(x => x.GetViewModel).ToList();
+		}
 
         public PlanViewModel? GetElement(PlanSearchModel model)
         {
@@ -40,7 +40,7 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
                 return null;
             }
             using var context = new FactoryDatabase();
-            return context.Plans.Include(x => x.Components).ThenInclude(x => x.Component).Include(x => x.Lathes).ThenInclude(x => x.Lathe)
+            return context.Plans.Include(x => x.Reinforceds).ThenInclude(x => x.Reinforced)
                 .FirstOrDefault(x => 
                 (!string.IsNullOrEmpty(model.PlanName) && x.PlanName == model.PlanName) ||
                 (model.Id.HasValue && x.Id == model.Id))
@@ -73,8 +73,7 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
                 }
                 Plan.Update(model);
                 context.SaveChanges();
-                Plan.UpdateComponents(context, model);
-                Plan.UpdateLathes(context, model);
+                Plan.UpdateReinforceds(context, model);
                 transaction.Commit();
                 return Plan.GetViewModel;
             }
@@ -88,14 +87,14 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
         public PlanViewModel? Delete(PlanBindingModel model)
         {
             using var context = new FactoryDatabase();
-            var element = context.Plans.Include(x => x.Components).Include(x => x.Lathes).FirstOrDefault(rec => rec.Id == model.Id);
-            if (element != null)
-            {
-                context.Plans.Remove(element);
-                context.SaveChanges();
-                return element.GetViewModel;
-            }
-            return null;
-        }
+			var element = context.Plans.Include(x => x.Reinforceds).FirstOrDefault(rec => rec.Id == model.Id);
+			if (element != null)
+			{
+				context.Plans.Remove(element);
+				context.SaveChanges();
+				return element.GetViewModel;
+			}
+			return null;
+		}
     }
 }

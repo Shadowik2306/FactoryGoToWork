@@ -8,10 +8,10 @@ namespace FactoryContracts.BindingModels
 
         public string PlanName { get; set; } = string.Empty;
 
-        public Dictionary<int, ILatheModel> PlanLathes { get; set; } = new();
+		public DateTime StartDate { get; set; }
 
-        public Dictionary<int, IComponentModel> PlanComponents { get; set; } = new();
+		public DateTime EndDate { get; set; }
 
-        public DateTime date { get; set; }
-    }
+		public Dictionary<int, (IReinforcedModel, int)> PlanReinforcedes { get; set; } = new();
+	}
 }

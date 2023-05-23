@@ -6,8 +6,12 @@ namespace FactoryContracts.SearchModels
     {
         public int? Id { get; set; }
 
+        public string? Name { get; set; }
+
         public int? PlanId { get; set; }
 
-        public int? ReinforsedId { get; set; }
-    }
+		public DateTime? DateTo { get; set; }
+
+		public DateTime? DateFrom { get; set; }
+	}
 }

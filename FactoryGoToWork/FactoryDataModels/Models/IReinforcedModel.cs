@@ -9,7 +9,5 @@ namespace FactoryDataModels.Models
     public interface IReinforcedModel : IId
     {
         string ReinforcedName { get; }
-        int EngenierId { get; }
-        Dictionary<int, IComponentModel> ReinforcedComponents { get; }
     }
 }

@@ -44,16 +44,16 @@ namespace FactoryDatabaseImplement.Implements
 
         public ComponentViewModel? Insert(ComponentBindingModel model)
         {
-            var newComponent = Component.Create(model);
-            if (newComponent == null)
-            {
-                return null;
-            }
-            using var context = new FactoryDatabase();
-            context.Components.Add(newComponent);
-            context.SaveChanges();
-            return newComponent.GetViewModel;
-        }
+			using var context = new FactoryDatabase();
+			var newComponent = Component.Create(context, model);
+			if (newComponent == null)
+			{
+				return null;
+			}
+			context.Components.Add(newComponent);
+			context.SaveChanges();
+			return newComponent.GetViewModel;
+		}
 
         public ComponentViewModel? Update(ComponentBindingModel model)
         {

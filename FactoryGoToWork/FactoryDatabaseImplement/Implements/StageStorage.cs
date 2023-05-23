@@ -56,7 +56,7 @@ namespace FactoryDatabaseImplement.Implements
 		{
 			using var context = new FactoryDatabase();
 
-			var newStage = Stage.Create(context, model);
+			var newStage = Stage.Create(model);
 
 			if (newStage == null)
 			{

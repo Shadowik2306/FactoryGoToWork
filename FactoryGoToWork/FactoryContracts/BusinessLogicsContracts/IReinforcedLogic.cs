@@ -11,7 +11,5 @@ namespace FactoryContracts.BusinessLogicsContracts
         bool Create(ReinforcedBindingModel model);
         bool Update(ReinforcedBindingModel model);
         bool Delete(ReinforcedBindingModel model);
-
-        public bool addComponent(int ReinforcedId, int ComponentId);
     }
 }

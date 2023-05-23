@@ -11,5 +11,9 @@ namespace FactoryDataModels.Models
         string ComponentName { get; }
 
         double Cost { get; }
-    }
+
+		int EngenierId { get; }
+
+		Dictionary<int, (IPlanModel, int)> ComponentPlans { get; }
+	}
 }

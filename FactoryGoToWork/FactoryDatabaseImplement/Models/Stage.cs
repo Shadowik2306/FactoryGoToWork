@@ -17,31 +17,34 @@ namespace FactoryDatabaseImplement.Models
         [Required]
         public int PlanId { get; set; }
 
-        [Required]
-        public int ReinforsedId { get; set; }
+		public string Name { get; set; } = string.Empty;
 
-        public static Stage Create(FactoryDatabase context, StageBindingModel model)
-        {
-            return new Stage()
-            {
-                Id = model.Id,
-                ReinforsedId = model.ReinforsedId,
-                PlanId = model.PlanId
-            };
-        }
+		public DateTime StartDate { get; set; }
 
-        public void Update(StageBindingModel model)
-        {
-            ReinforsedId = model.ReinforsedId;
-            PlanId = model.PlanId;
-        }
-    
+		public DateTime EndDate { get; set; }
 
-        public StageViewModel GetViewModel => new()
-        {
-            Id = Id,
-            ReinforsedId = ReinforsedId,
-            PlanId = PlanId
-        };
-    }
+		public static Stage Create(StageBindingModel model)
+		{
+			return new Stage()
+			{
+				Id = model.Id,
+				PlanId = model.PlanId,
+				Name = model.Name,
+				StartDate = model.StartDate,
+				EndDate = model.EndDate,
+			};
+		}
+		public void Update(StageBindingModel model)
+		{
+			Name = model.Name;
+		}
+		public StageViewModel GetViewModel => new()
+		{
+			Id = Id,
+			PlanId = PlanId,
+			Name = Name,
+			StartDate = StartDate,
+			EndDate = EndDate,
+		};
+	}
 }

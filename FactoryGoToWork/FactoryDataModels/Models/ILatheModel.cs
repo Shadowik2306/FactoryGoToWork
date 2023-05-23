@@ -11,6 +11,7 @@ namespace FactoryDataModels.Models
         string LatheName { get; }
         int MasterId { get; }
         int BusyId { get; }
-        Dictionary<int, IReinforcedModel> LatheReinforcedes { get; }
-    }
+        Dictionary<int, (IReinforcedModel, int)> LatheReinforcedes { get; }
+		Dictionary<int, (IComponentModel, int)>  LatheComponents { get; }
+	}
 }

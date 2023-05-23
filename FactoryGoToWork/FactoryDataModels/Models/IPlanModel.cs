@@ -9,11 +9,8 @@ namespace FactoryDataModels.Models
     public interface IPlanModel : IId
     {
         string PlanName { get; }
-
-        Dictionary<int, ILatheModel> PlanLathes { get; }
-
-        Dictionary<int, IComponentModel> PlanComponents { get; }
-
-        DateTime date { get; }
+		DateTime StartDate { get; }
+		DateTime EndDate { get; }
+		Dictionary<int, (IReinforcedModel, int)> PlanReinforcedes { get; }        
     }
 }

@@ -8,8 +8,9 @@ namespace FactoryDataModels.Models
 {
     public interface IStageModel : IId
     {
-        public int PlanId { get; }
-
-        public int ReinforsedId { get; }
-    }
+        string Name { get; }
+		DateTime StartDate { get; }
+		DateTime EndDate { get; }
+		int PlanId { get; }
+	}
 }
