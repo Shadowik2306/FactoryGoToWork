@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FactoryDatabaseImplement;
 
-namespace PrecastConcretePlantDatabaseImplement.Implements
+namespace FactoryDatabaseImplement.Implements
 {
     public class PlanStorage : IPlanStorage
     {
@@ -24,13 +24,21 @@ namespace PrecastConcretePlantDatabaseImplement.Implements
 
         public List<PlanViewModel> GetFilteredList(PlanSearchModel model)
         {
-            if (string.IsNullOrEmpty(model.PlanName))
-            {
-                return new();
-            }
             using var context = new FactoryDatabase();
-			return context.Plans.Include(x => x.Reinforceds).ThenInclude(x => x.Reinforced)
-					.Where(x => x.PlanName.Contains(model.PlanName)).ToList().Select(x => x.GetViewModel).ToList();
+            var result = context.Plans.Include(x => x.Reinforceds).ThenInclude(x => x.Reinforced).ToList();
+
+            if (model.PlanName != String.Empty)
+            {
+                result = result.Where(x => x.PlanName.Contains(model.PlanName)).ToList();
+            }
+            
+
+            if (model.DateTo.HasValue && model.DateFrom.HasValue)
+            {
+                result = result.Where(x => x.StartDate >= model.DateFrom && x.EndDate < model.DateTo).ToList();
+            }
+
+            return result.Select(x => x.GetViewModel).ToList();
 		}
 
         public PlanViewModel? GetElement(PlanSearchModel model)

@@ -1,0 +1,57 @@
+﻿@using FactoryContracts.ViewModels
+
+@model List<ComponentViewModel>
+
+@{
+	ViewData["Title"] = "Component Page";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Заготовки</h1>
+</div>
+
+
+<div class="text-center">
+	@{
+		if (Model == null)
+		{
+					<h3 class="display-4">Авторизируйтесь</h3>
+			return;
+		}
+
+			<p>
+				<a asp-action="CreateComponent">Создать заготовки</a>
+			</p>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Номер
+						</th>
+						<th>
+							Название
+						</th>
+						<th>
+							Инженер
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach (var item in Model)
+				{
+							<tr>
+								<td>
+							@Html.DisplayFor(modelItem => item.Id)
+								</td>
+								<td>
+							@Html.DisplayFor(modelItem => item.ComponentName)
+								</td>
+								<td>
+							@Html.DisplayFor(modelItem => item.EngenierId)
+								</td>
+							</tr>
+				}
+				</tbody>
+			</table>
+	}
+</div>

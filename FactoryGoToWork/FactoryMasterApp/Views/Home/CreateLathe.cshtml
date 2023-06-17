@@ -1,0 +1,50 @@
+﻿@using FactoryContracts.ViewModels
+@model CheckboxLatheViewModel
+
+@{
+	ViewData["Title"] = "CreateLathe";
+}
+
+<div class="text-center">
+	<h2 class="display-4">Создание станка</h2>
+</div>
+<form method="post">
+	<h3>Изделия:</h3>
+	@for (var item = 0; item < @Model.Reinforcedes.Count(); item++)
+	{
+		<div class="form-check">
+			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" asp-for="@Model.Reinforcedes[item].IsChecked">
+			<label class="form-check-label" for="flexSwitchCheckDefault">@Model.Reinforcedes[item].LabelName</label>
+			<input type="hidden" asp-for="@Model.Reinforcedes[item].Id" />
+			<input type="hidden" asp-for="@Model.Reinforcedes[item].LabelName" />
+			<input type="number" asp-for="@Model.Reinforcedes[item].Count" />
+		</div>
+	}
+	<hr>
+	<h3>Заготовки:</h3>
+	@for (var item = 0; item < @Model.Components.Count(); item++)
+	{
+		<div class="form-check">
+			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" asp-for="@Model.Components[item].IsChecked">
+			<label class="form-check-label" for="flexSwitchCheckDefault">@Model.Components[item].LabelName</label>
+			<input type="hidden" asp-for="@Model.Components[item].Id" />
+			<input type="hidden" asp-for="@Model.Components[item].LabelName" />
+			<input type="number" asp-for="@Model.Components[item].Count" />
+		</div>
+	}
+	<hr>
+	<div class="row">
+		<div class="col-4">Название:</div>
+		<div class="col-8"><input type="text" name="title" id="title" /></div>
+	</div>
+	<div class="row">
+		<div class="col-4">Занятость:</div>
+		<div class="col-8"><input type="text" name="percent" id="percent" /></div>
+	</div>
+	<div class="row">
+		<div class="col-8"></div>
+		<div class="col-4">
+			<input type="submit" value="Создание" class="btn btn-primary" />
+		</div>
+	</div>
+</form>

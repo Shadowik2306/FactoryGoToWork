@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FactoryDatabaseImplement;
 
-namespace PrecastConcretePlantDatabaseImplement.Implements
+namespace FactoryDatabaseImplement.Implements
 {
     public class ReinforcedStorage : IReinforcedStorage
     {

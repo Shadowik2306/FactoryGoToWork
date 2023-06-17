@@ -1,13 +1,13 @@
 ﻿@using FactoryContracts.ViewModels
 
-@model List<LatheViewModel>
+@model List<PlanViewModel>
 
 @{
-	ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Plan Page";
 }
 
 <div class="text-center">
-	<h1 class="display-4">Станки</h1>
+	<h1 class="display-4">Планы</h1>
 </div>
 
 
@@ -20,7 +20,7 @@
 		}
 
 			<p>
-				<a asp-action="Create">Создать станок</a>
+				<a asp-action="CreatePlan">Создать план</a>
 			</p>
 			<table class="table">
 				<thead>
@@ -32,10 +32,10 @@
 							Название
 						</th>
 						<th>
-							Мастер
+							Дата начала
 						</th>
 						<th>
-							Занятость
+							Дата конца
 						</th>
 					</tr>
 				</thead>
@@ -47,13 +47,13 @@
 							@Html.DisplayFor(modelItem => item.Id)
 								</td>
 								<td>
-							@Html.DisplayFor(modelItem => item.LatheName)
+							@Html.DisplayFor(modelItem => item.PlanName)
 								</td>
 								<td>
-							@Html.DisplayFor(modelItem => item.MasterId)
+							@Html.DisplayFor(modelItem => item.StartDate)
 								</td>
 								<td>
-							@Html.DisplayFor(modelItem => item.BusyId)
+							@Html.DisplayFor(modelItem => item.EndDate)
 								</td>
 							</tr>
 				}

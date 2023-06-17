@@ -1,7 +1,7 @@
 ﻿
 using FactoryContracts.BindingModels;
 using FactoryContracts.ViewModels;
-using PrecastConcretePlantContracts.ViewModels;
+using FactoryContracts.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +13,11 @@ namespace FactoryContracts.BusinessLogicsContracts
     public interface IReportLogic
     {
         List<ReportLatheComponentViewModel> GetPlanLathesAndComponents(ReportBindingModel model);
-        List<ReportLatheViewModel> GetLatheByBusy(ReportBindingModel model);
-        void SaveToWordFile(ReportBindingModel model);
-        void SaveToExcelFile(ReportBindingModel model);
-        void SaveToPdfFile(ReportBindingModel model);
+        public List<ReportLatheViewModel> GetLatheByBusy(ReportBindingModel model, DateTime dateFrom, DateTime dateTo);
+
+        public List<ReportPlansByReinforcedes> GetPlansByReinforcedes(ReinforcedViewModel reinforceds);
+        void SaveToWordFileMaster(ReportBindingModel model, ReinforcedViewModel reinforceds);
+        void SaveToExcelFileMaster(ReportBindingModel model, ReinforcedViewModel reinforceds);
+        public void SaveToPdfFileMaster(ReportBindingModel model, DateTime dateFrom, DateTime dateTo, MasterViewModel master);
     }
 }

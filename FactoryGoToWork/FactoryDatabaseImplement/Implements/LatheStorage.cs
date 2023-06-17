@@ -17,7 +17,12 @@ namespace FactoryDatabaseImplement.Implements
         public List<LatheViewModel> GetFullList()
         {
             using var context = new FactoryDatabase();
-            return context.Lathes.Select(x => x.GetViewModel).ToList();
+            return context.Lathes
+                .Include(x => x.Components)
+                .ThenInclude(x => x.Component)
+                .Include(x => x.Reinforcedes)
+                .ThenInclude(x => x.Reinforced)
+                .Select(x => x.GetViewModel).ToList();
         }
 
         public List<LatheViewModel> GetFilteredList(LatheSearchModel model)
@@ -27,7 +32,10 @@ namespace FactoryDatabaseImplement.Implements
                 return new();
             }
             using var context = new FactoryDatabase();
-            return context.Lathes.Where(x => x.LatheName.Contains(model.LatheName)).Select(x => x.GetViewModel).ToList();
+            return context.Lathes.Include(x => x.Components)
+                .ThenInclude(x => x.Component)
+                .Include(x => x.Reinforcedes)
+                .ThenInclude(x => x.Reinforced).Where(x => x.LatheName.Contains(model.LatheName)).Select(x => x.GetViewModel).ToList();
         }
 
         public LatheViewModel? GetElement(LatheSearchModel model)
@@ -37,18 +45,22 @@ namespace FactoryDatabaseImplement.Implements
                 return null;
             }
             using var context = new FactoryDatabase();
-            return context.Lathes.FirstOrDefault(x => x.Id == model.Id)
+            return context.Lathes .Include(x => x.Components)
+                .ThenInclude(x => x.Component)
+                .Include(x => x.Reinforcedes)
+                .ThenInclude(x => x.Reinforced).FirstOrDefault(x => x.Id == model.Id)
                 ?.GetViewModel;
         }
 
         public LatheViewModel? Insert(LatheBindingModel model)
         {
-            var newLathe = Lathe.Create(new FactoryDatabase(), model);
+            using var context = new FactoryDatabase();
+            var newLathe = Lathe.Create(context, model);
             if (newLathe == null)
             {
                 return null;
             }
-            using var context = new FactoryDatabase();
+            
             context.Lathes.Add(newLathe);
             context.SaveChanges();
             return newLathe.GetViewModel;

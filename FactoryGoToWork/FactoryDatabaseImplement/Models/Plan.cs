@@ -33,7 +33,7 @@ namespace FactoryDatabaseImplement.Models
 			{
 				if (_planReinforcedes == null)
 				{
-					_planReinforcedes = Reinforceds.ToDictionary(recCS => recCS.ReinforceId, recCS => (recCS.Reinforced as IReinforcedModel, recCS.Count));
+					_planReinforcedes = Reinforceds.ToDictionary(recCS => recCS.ReinforcedId, recCS => (recCS.Reinforced as IReinforcedModel, recCS.Count));
 				}
 				return _planReinforcedes;
 			}
@@ -48,11 +48,13 @@ namespace FactoryDatabaseImplement.Models
 				Id = model.Id,
 				StartDate = model.StartDate,
 				EndDate = model.EndDate,
+				PlanName = model.PlanName,
 				Reinforceds = model.PlanReinforcedes.Select(x => new PlanReinforced
 				{
 					Count = x.Value.Item2,
 					Reinforced = context.Reinforceds.First(y => y.Id == x.Key)
-				}).ToList()
+				}).ToList(),
+			
 			};
 		}
 		public void Update(PlanBindingModel model)
@@ -62,6 +64,7 @@ namespace FactoryDatabaseImplement.Models
 		public PlanViewModel GetViewModel => new()
 		{
 			Id = Id,
+			PlanName = PlanName,
 			StartDate = StartDate,
 			EndDate= EndDate,
 			PlanReinforcedes=PlanReinforcedes

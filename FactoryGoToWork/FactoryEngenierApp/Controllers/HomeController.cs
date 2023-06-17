@@ -1,5 +1,8 @@
 ﻿using FactoryContracts.BindingModels;
+using FactoryContracts.BusinessLogicsContracts;
+using FactoryContracts.SearchModels;
 using FactoryContracts.ViewModels;
+using FactoryDataModels.Models;
 using FactoryEngenierApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,29 +12,40 @@ namespace FactoryEngenierApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        public static EngenierViewModel Engenier { get; set; } = null;
 
-        public HomeController(ILogger<HomeController> logger)
+        public readonly IComponentLogic _componentLogic;
+        public readonly IEngenierLogic _engenierLogic;
+        public readonly ILatheBusyLogic _latheBusyLogic;
+        public readonly ILatheLogic _latheLogic;
+        public readonly IMasterLogic _masterLogic;
+        public readonly IPlanLogic _planLogic;
+        public readonly IReinforcedLogic _reinforcedLogic;
+        public readonly IStageLogic _stageLogic;
+
+        public HomeController(ILogger<HomeController> logger, IComponentLogic componentLogic, IEngenierLogic engenierLogic,
+            ILatheBusyLogic latheBusyLogic, ILatheLogic latheLogic, IMasterLogic masterLogic, IPlanLogic planLogic,
+             IReinforcedLogic reinforcedLogicz, IStageLogic stageLogic)
         {
             _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            if (APIEngenier.Engenier == null)
-            {
-                return Redirect("~/Home/Enter");
-            }
-            return View(APIEngenier.GetRequest<List<ReinforcedViewModel>>($"api/Read/getReinforcedes"));
+            _componentLogic = componentLogic;
+            _engenierLogic = engenierLogic;
+            _latheBusyLogic = latheBusyLogic;
+            _latheLogic = latheLogic;
+            _masterLogic = masterLogic;
+            _planLogic = planLogic;
+            _reinforcedLogic = reinforcedLogicz;
+            _stageLogic = stageLogic;
         }
 
         [HttpGet]
         public IActionResult Privacy()
         {
-            if (APIEngenier.Engenier == null)
+            if (Engenier == null)
             {
                 return Redirect("~/Home/Enter");
             }
-            return View(APIEngenier.Engenier);
+            return View(Engenier);
         }
 
 
@@ -54,12 +68,15 @@ namespace FactoryEngenierApp.Controllers
             {
                 throw new Exception("Введите логин и пароль");
             }
-            APIEngenier.Engenier = APIEngenier.GetRequest<EngenierViewModel>($"api/Main/LoginEngenier?login={login}&password={password}");
-            if (APIEngenier.Engenier == null)
+            Engenier = _engenierLogic.ReadElement(new EngenierSearchModel() { 
+                Email = login,
+                Password = password
+            });
+            if (Engenier == null)
             {
                 throw new Exception("Неверный логин/пароль");
             }
-            Response.Redirect("Index");
+            Response.Redirect("IndexComponent");
         }
 
         [HttpGet]
@@ -75,7 +92,7 @@ namespace FactoryEngenierApp.Controllers
             {
                 throw new Exception("Введите логин, пароль и ФИО");
             }
-            APIEngenier.PostRequest("api/Main/RegisterEngenier", new EngenierBindingModel
+            _engenierLogic.Create(new EngenierBindingModel
             {
                 Fio = fio,
                 Email = login,
@@ -85,26 +102,93 @@ namespace FactoryEngenierApp.Controllers
             return;
         }
 
-        [HttpGet]
-        public IActionResult Create()
+
+        public IActionResult IndexComponent()
         {
-            return View();
+            if (Engenier == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return View(_componentLogic.ReadList(null));
         }
 
-        [HttpPost]
-        public void Create(string title)
+        [HttpGet]
+        public IActionResult CreateComponent()
         {
-            if (APIEngenier.Engenier == null)
+            if (Engenier == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return View(_planLogic.ReadList(null).Select(x => new CheckboxViewModel() { 
+                Id = x.Id,
+                Count = 0,
+                IsChecked = false,
+                LabelName = x.PlanName,
+                Object = x
+            }).ToList());
+        }
+
+
+        [HttpPost]
+        public void CreateComponent(string title, int cost, List<CheckboxViewModel> plans)
+        {
+            if (Engenier == null)
             {
                 throw new Exception("Вы как суда попали? Суда вход только авторизованным");
             }
-            APIEngenier.PostRequest("api/Main/CreateReinforced", new ReinforcedBindingModel
+           _componentLogic.Create(new ComponentBindingModel
             {
-                EngenierId = APIEngenier.Engenier.Id,
-                ReinforcedName = title
-            });
-            Response.Redirect("Index");
+                ComponentName = title,
+                EngenierId = Engenier.Id,
+                Cost = cost,
+                ComponentPlans = plans.Where(x => x.IsChecked).ToDictionary(x => x.Id, x => (x.Object as IPlanModel, x.Count))
+           });;
+            Response.Redirect("IndexComponent");
         }
 
+        public IActionResult IndexPlan()
+        {
+            if (Engenier == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return View(_planLogic.ReadList(null));
+        }
+
+        [HttpGet]
+        public IActionResult CreatePlan()
+        {
+            if (Engenier == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return View(_reinforcedLogic.ReadList(null).Select(x => new CheckboxViewModel()
+            {
+                Id = x.Id,
+                Count = 0,
+                IsChecked = false,
+                LabelName = x.ReinforcedName,
+                Object = x
+            }).ToList());
+        }
+
+
+        [HttpPost]
+        public void CreatePlan(string title, DateTime start, DateTime end, List<CheckboxViewModel> reinforcedes)
+        {
+            if (Engenier == null)
+            {
+                throw new Exception("Вы как суда попали? Суда вход только авторизованным");
+            }
+            _planLogic.Create(new PlanBindingModel() { 
+                PlanName = title,
+                StartDate = start,
+                EndDate = end,
+                PlanReinforcedes = reinforcedes.Where(x => x.IsChecked).ToDictionary(x => x.Id, x => (x.Object as IReinforcedModel, x.Count))
+            });
+            Response.Redirect("IndexComponent");
+        }
+
+        
     }
 }

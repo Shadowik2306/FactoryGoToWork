@@ -15,7 +15,7 @@ namespace FactoryDatabaseImplement.Models
         public int PlanId { get; set; }
 
         [Required]
-        public int ReinforceId { get; set; }
+        public int ReinforcedId { get; set; }
 		[Required]
 		public int Count { get; set; }
 

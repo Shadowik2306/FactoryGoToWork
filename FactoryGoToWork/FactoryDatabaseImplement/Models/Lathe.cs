@@ -37,7 +37,7 @@ namespace FactoryDatabaseImplement.Models
 				return _latheReinforcedes;
 			}
 		}
-		[NotMapped]
+		[ForeignKey("LatheId")]
 		public virtual List<LatheReinforced> Reinforcedes { get; set; } = new();
 
 		private Dictionary<int, (IComponentModel, int)>? _latheComponents { get; set; } = null;
@@ -61,8 +61,8 @@ namespace FactoryDatabaseImplement.Models
 		{
 			return new Lathe()
 			{
-				Id = model.Id,
-				MasterId = model.MasterId,
+                Id = model.Id,
+                MasterId = model.MasterId,
 				BusyId = model.BusyId,
 				Reinforcedes = model.LatheReinforcedes.Select(x => new LatheReinforced
 				{
@@ -73,7 +73,8 @@ namespace FactoryDatabaseImplement.Models
 				{
 					Component = context.Components.First(y => y.Id == x.Key),
 					Count = x.Value.Item2
-				}).ToList()
+				}).ToList(),
+				LatheName = model.LatheName,
 			};
 		}
 

@@ -3,6 +3,7 @@ using FactoryContracts.SearchModels;
 using FactoryContracts.StoragesContracts;
 using FactoryContracts.ViewModels;
 using FactoryDatabaseImplement.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace FactoryDatabaseImplement.Implements
         public List<ComponentViewModel> GetFullList()
         {
             using var context = new FactoryDatabase();
-            return context.Components.Select(x => x.GetViewModel).ToList();
+            return context.Components.Include(x => x.Plans).ThenInclude(x => x.Plan)
+                .Select(x => x.GetViewModel).ToList();
         }
 
         public List<ComponentViewModel> GetFilteredList(ComponentSearchModel model)
@@ -26,7 +28,8 @@ namespace FactoryDatabaseImplement.Implements
                 return new();
             }
             using var context = new FactoryDatabase();
-            return context.Components.Where(x => x.ComponentName.Contains(model.ComponentName)).Select(x => x.GetViewModel).ToList();
+            return context.Components.Include(x => x.Plans).ThenInclude(x => x.Plan)
+                .Where(x => x.ComponentName.Contains(model.ComponentName)).Select(x => x.GetViewModel).ToList();
         }
 
         public ComponentViewModel? GetElement(ComponentSearchModel model)
@@ -36,7 +39,8 @@ namespace FactoryDatabaseImplement.Implements
                 return null;
             }
             using var context = new FactoryDatabase();
-            return context.Components.FirstOrDefault(x => 
+            return context.Components.Include(x => x.Plans).ThenInclude(x => x.Plan)
+                .FirstOrDefault(x => 
             (!string.IsNullOrEmpty(model.ComponentName) && x.ComponentName == model.ComponentName) || 
             (model.Id.HasValue && x.Id == model.Id))
                 ?.GetViewModel;

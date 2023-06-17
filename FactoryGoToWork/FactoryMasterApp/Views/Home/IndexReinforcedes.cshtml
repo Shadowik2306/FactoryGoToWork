@@ -20,16 +20,13 @@
 		}
 
 			<p>
-				<a asp-action="Create">Создать изделие</a>
+			<a asp-action="CreateReinforcedes">Создать изделия</a>
 			</p>
 			<table class="table">
 				<thead>
 					<tr>
 						<th>
 							Номер
-						</th>
-						<th>
-							Инженер
 						</th>
 						<th>
 							Название
@@ -42,9 +39,6 @@
 							<tr>
 								<td>
 							@Html.DisplayFor(modelItem => item.Id)
-								</td>
-								<td>
-							@Html.DisplayFor(modelItem => item.EngenierId)
 								</td>
 								<td>
 							@Html.DisplayFor(modelItem => item.ReinforcedName)
