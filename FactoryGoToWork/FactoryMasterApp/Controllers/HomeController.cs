@@ -244,7 +244,7 @@ namespace PrecastConcretePlantClientApp.Controllers
         public IActionResult CreatePdfReport(DateTime dateFrom, DateTime dateTo)
         {
             _reportLogic.SaveToPdfFileMaster(new ReportBindingModel(), dateFrom, dateTo, Master);
-            return View(_reportLogic.GetLatheByBusy(new ReportBindingModel(), dateFrom, dateTo));
+            return Redirect("ReportsPdf");
         }
     }
 }

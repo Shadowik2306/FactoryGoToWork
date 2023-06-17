@@ -1,8 +1,12 @@
 using FactoryBusinessLogic.BusinessLogics;
+using FactoryBusinessLogic.Mail;
+using FactoryBusinessLogic.OfficePackage.Implements;
+using FactoryBusinessLogic.OfficePackage;
 using FactoryContracts.BusinessLogicsContracts;
 using FactoryContracts.StoragesContracts;
 using FactoryDatabaseImplement.Implements;
 using FactoryEngenierApp;
+using FactoryContracts.BindingModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +31,13 @@ builder.Services.AddTransient<IPlanLogic, PlanLogic>();
 builder.Services.AddTransient<IReinforcedLogic, ReinforcedLogic>();
 builder.Services.AddTransient<IStageLogic, StageLogic>();
 
+builder.Services.AddTransient<IReportLogic, ReportLogic>();
+builder.Services.AddTransient<AbstractSaveToExcel, SaveToExcel>();
+builder.Services.AddTransient<AbstractSaveToWord, SaveToWord>();
+builder.Services.AddTransient<AbstractSaveToPdf, SaveToPdf>();
+
+builder.Services.AddSingleton<MailWorker>();
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -35,6 +46,15 @@ if (!app.Environment.IsDevelopment())
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
 }
+
+var mailSender = app.Services.GetService<MailWorker>();
+mailSender?.MailConfig(new MailConfigBindingModel
+{
+    MailLogin = builder.Configuration?.GetSection("MailLogin")?.Value?.ToString() ?? string.Empty,
+    MailPassword = builder.Configuration?.GetSection("MailPassword")?.Value?.ToString() ?? string.Empty,
+    SmtpClientHost = builder.Configuration?.GetSection("SmtpClientHost")?.Value?.ToString() ?? string.Empty,
+    SmtpClientPort = Convert.ToInt32(builder.Configuration?.GetSection("SmtpClientPort")?.Value?.ToString()),
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

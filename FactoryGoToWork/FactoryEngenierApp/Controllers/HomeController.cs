@@ -1,7 +1,9 @@
-﻿using FactoryContracts.BindingModels;
+﻿using FactoryBusinessLogic.BusinessLogics;
+using FactoryContracts.BindingModels;
 using FactoryContracts.BusinessLogicsContracts;
 using FactoryContracts.SearchModels;
 using FactoryContracts.ViewModels;
+using FactoryDatabaseImplement.Models;
 using FactoryDataModels.Models;
 using FactoryEngenierApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,10 +24,11 @@ namespace FactoryEngenierApp.Controllers
         public readonly IPlanLogic _planLogic;
         public readonly IReinforcedLogic _reinforcedLogic;
         public readonly IStageLogic _stageLogic;
+        public readonly IReportLogic _reportLogic;
 
         public HomeController(ILogger<HomeController> logger, IComponentLogic componentLogic, IEngenierLogic engenierLogic,
             ILatheBusyLogic latheBusyLogic, ILatheLogic latheLogic, IMasterLogic masterLogic, IPlanLogic planLogic,
-             IReinforcedLogic reinforcedLogicz, IStageLogic stageLogic)
+             IReinforcedLogic reinforcedLogicz, IStageLogic stageLogic, IReportLogic reportLogic)
         {
             _logger = logger;
             _componentLogic = componentLogic;
@@ -36,6 +39,7 @@ namespace FactoryEngenierApp.Controllers
             _planLogic = planLogic;
             _reinforcedLogic = reinforcedLogicz;
             _stageLogic = stageLogic;
+            _reportLogic = reportLogic;
         }
 
         [HttpGet]
@@ -189,6 +193,52 @@ namespace FactoryEngenierApp.Controllers
             Response.Redirect("IndexComponent");
         }
 
-        
+        [HttpGet]
+        public IActionResult ReportsDock()
+        {
+            ViewBag.Components = _componentLogic.ReadList(null);
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ReportsDock(int componentId)
+        {
+            ViewBag.Components = _componentLogic.ReadList(null);
+            return View(_reportLogic.GetLatheByComponent(_componentLogic.ReadElement(new ComponentSearchModel() { Id = componentId })));
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateWordReport(int componentId)
+        {
+            _reportLogic.SaveToWordFileEngenier(new ReportBindingModel(), _componentLogic.ReadElement(new ComponentSearchModel() { Id = componentId }));
+            return Redirect("ReportsDock");
+        }
+
+        [HttpPost]
+        public IActionResult CreateExcelReport(int componentId)
+        {
+            _reportLogic.SaveToExcelFileEngenier(new ReportBindingModel(), _componentLogic.ReadElement(new ComponentSearchModel() { Id = componentId }));
+            return Redirect("ReportsDock");
+        }
+
+        [HttpGet]
+        public IActionResult ReportsPdf()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ReportsPdf(DateTime dateFrom, DateTime dateTo)
+        {
+            return View(_reportLogic.GetLatheByBusy(new ReportBindingModel(), dateFrom, dateTo));
+        }
+
+        [HttpPost]
+        public IActionResult CreatePdfReport(DateTime dateFrom, DateTime dateTo)
+        {
+            _reportLogic.SaveToPdfFileEngenier(new ReportBindingModel(), dateFrom, dateTo, Engenier);
+            return Redirect("ReportsPdf");
+        }
     }
 }

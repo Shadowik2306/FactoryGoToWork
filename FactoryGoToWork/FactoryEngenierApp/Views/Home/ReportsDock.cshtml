@@ -1,0 +1,69 @@
+﻿@using FactoryContracts.ViewModels
+
+@model List<ReportLatheByComponents>
+
+@{
+	ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Отчет по планам</h1>
+</div>
+
+
+<div class="text-center">
+	@{
+		<form method="post">
+			<div class="row">
+				<div class="col-4">Выберите изделие:</div>
+				<div class="col-8">
+					<select id="componentId" name="componentId" class="form-control" asp-items="@(new SelectList( @ViewBag.Components, "Id", "ComponentName"))"></select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-8"></div>
+				<div class="col-4">
+					<input type="submit" value="Создание отчета" class="btn btn-success" />
+				</div>
+			</div>
+			<button style="width:100%" class="btn btn-lg btn-block" type="submit" asp-controller="Home" asp-action="CreateExcelReport">Создать xls отчёт</button>
+			<button style="width:100%" class="btn btn-lg btn-block" type="submit" asp-controller="Home" asp-action="CreateWordReport">Создать word отчёт </button>
+		</form>
+			
+			@if (Model != null)
+			{
+				<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Изделие
+						</th>
+						<th>
+							План
+						</th>
+						<th>
+							Кол-во
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach (var item in Model)
+				{
+							<tr>
+								<td>
+							@Html.DisplayFor(modelItem => item.ComponentName)
+								</td>
+								<td>
+							@Html.DisplayFor(modelItem => item.LatheName)
+								</td>
+								<td>
+							@Html.DisplayFor(modelItem => item.Count)
+								</td>
+							</tr>
+				}
+				</tbody>
+			</table>
+			}
+			
+	}
+</div>

@@ -131,11 +131,58 @@ namespace FactoryBusinessLogic.BusinessLogics
             });
         }
 
-        
-
-        public List<ReportLatheComponentViewModel> GetPlanLathesAndComponents(ReportBindingModel model)
+        public List<ReportLatheByComponents> GetLatheByComponent(ComponentViewModel components)
         {
-            throw new NotImplementedException();
+            var result = new List<ReportLatheByComponents>();
+            foreach (var lathe in _latheLogic.ReadList(null).Where(x => x.LatheComponents.ContainsKey(components.Id))) {
+                result.Add(new ReportLatheByComponents() { 
+                    ComponentName = components.ComponentName,
+                    LatheName = lathe.LatheName,
+                    Count = lathe.LatheComponents[components.Id].Item2
+                });
+            }
+            return result;
+        }
+
+        public void SaveToWordFileEngenier(ReportBindingModel model, ComponentViewModel components)
+        {
+            _saveToWord.CreateLatheReport(new WordInfoEngenier()
+            {
+                FileName = "Отчет по компоненту.doc",
+                Title = "Отчет по компоненту " + components.ComponentName,
+                Lathe = GetLatheByComponent(components)
+            });
+        }
+
+        public void SaveToExcelFileEngenier(ReportBindingModel model, ComponentViewModel components)
+        {
+            _saveToExcel.CreateReportEngenier(new ExcelInfoEngenier()
+            {
+                FileName = "Отчет по компоненту.xls",
+                Title = "Отчет по компоненту " + components.ComponentName,
+                Lathe = GetLatheByComponent(components)
+            });
+        }
+
+        public void SaveToPdfFileEngenier(ReportBindingModel model, DateTime dateFrom, DateTime dateTo, EngenierViewModel engenier)
+        {
+            _saveToPdf.CreatePDFMaster(new PdfInfoMaster()
+            {
+                FileName = "Отчет по движению станков.pdf",
+                Title = "Отчет по движению станков",
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                Lathe = GetLatheByBusy(model, dateFrom, dateTo)
+            });
+
+            _mailKitWorker.SendMailAsync(new()
+            {
+                MailAddress = engenier.Email,
+                Subject = "Отчет по движению станков",
+                Text = $"Отчёт по состоянию на {DateTime.Now}",
+                File = System.IO.File.ReadAllBytes("Отчет по движению станков.pdf"),
+                FileName = "Отчет по движению станков.pdf"
+            });
         }
     }
 }

@@ -254,6 +254,42 @@ namespace FactoryBusinessLogic.OfficePackage.Implements
             _worksheet = worksheetPart.Worksheet;
         }
 
+        protected override void CreateExcel(ExcelInfoEngenier info)
+        {
+            _spreadsheetDocument = SpreadsheetDocument.Create(info.FileName, SpreadsheetDocumentType.Workbook);
+
+            var workbookpart = _spreadsheetDocument.AddWorkbookPart();
+
+            workbookpart.Workbook = new Workbook();
+
+            CreateStyles(workbookpart);
+
+            _shareStringPart = _spreadsheetDocument.WorkbookPart!.GetPartsOfType<SharedStringTablePart>().Any()
+                ? _spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First()
+                : _spreadsheetDocument.WorkbookPart.AddNewPart<SharedStringTablePart>();
+
+            if (_shareStringPart.SharedStringTable == null)
+            {
+                _shareStringPart.SharedStringTable = new SharedStringTable();
+            }
+
+            var worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+            worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+            var sheets = _spreadsheetDocument.WorkbookPart.Workbook.AppendChild(new Sheets());
+
+            var sheet = new Sheet()
+            {
+                Id = _spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                SheetId = 1,
+                Name = "Лист"
+            };
+
+            sheets.Append(sheet);
+
+            _worksheet = worksheetPart.Worksheet;
+        }
+
         protected override void InsertCellInWorksheet(ExcelCellParameters excelParams)
         {
             if (_worksheet == null || _shareStringPart == null)
@@ -352,6 +388,17 @@ namespace FactoryBusinessLogic.OfficePackage.Implements
         }
 
         protected override void SaveExcel(ExcelInfoMaster info)
+        {
+            if (_spreadsheetDocument == null)
+            {
+                return;
+            }
+
+            _spreadsheetDocument.WorkbookPart!.Workbook.Save();
+            _spreadsheetDocument.Close();
+        }
+
+        protected override void SaveExcel(ExcelInfoEngenier info)
         {
             if (_spreadsheetDocument == null)
             {

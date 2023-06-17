@@ -85,6 +85,17 @@ namespace FactoryBusinessLogic.OfficePackage.Implements
             _docBody = mainPart.Document.AppendChild(new Body());
         }
 
+        protected override void CreateWord(WordInfoEngenier info)
+        {
+            _wordDocument = WordprocessingDocument.Create(info.FileName, WordprocessingDocumentType.Document);
+
+            MainDocumentPart mainPart = _wordDocument.AddMainDocumentPart();
+
+            mainPart.Document = new Document();
+
+            _docBody = mainPart.Document.AppendChild(new Body());
+        }
+
         protected override void CreateParagraph(WordParagraph paragraph)
         {
             if (_docBody == null || paragraph == null)
@@ -123,6 +134,20 @@ namespace FactoryBusinessLogic.OfficePackage.Implements
         }
 
         protected override void SaveWord(WordInfoMaster info)
+        {
+            if (_docBody == null || _wordDocument == null)
+            {
+                return;
+            }
+
+            _docBody.AppendChild(CreateSectionProperties());
+
+            _wordDocument.MainDocumentPart!.Document.Save();
+
+            _wordDocument.Close();
+        }
+
+        protected override void SaveWord(WordInfoEngenier info)
         {
             if (_docBody == null || _wordDocument == null)
             {
