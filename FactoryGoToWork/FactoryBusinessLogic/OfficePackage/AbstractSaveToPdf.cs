@@ -22,7 +22,7 @@ namespace FactoryBusinessLogic.OfficePackage
 
 			CreateParagraph(new PdfParagraph { Text = info.Title, Style = "Normal", ParagraphAlignment = PdfParagraphAlignmentType.Center });
 
-			CreateTable(new List<string> { "4cm", "4cm", "4cm", "4cm", "4cm" });
+			CreateTable(new List<string> { "3cm", "3cm", "3cm", "3cm", "3cm" });
 
 			CreateRow(new PdfRowParameters
 			{

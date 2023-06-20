@@ -35,7 +35,7 @@ namespace FactoryDatabaseImplement.Implements
 
             if (model.DateTo.HasValue && model.DateFrom.HasValue)
             {
-                result = result.Where(x => x.StartDate >= model.DateFrom && x.EndDate < model.DateTo).ToList();
+                result = result.Where(x => x.StartDate >= model.DateFrom && x.EndDate <= model.DateTo).ToList();
             }
 
             return result.Select(x => x.GetViewModel).ToList();
